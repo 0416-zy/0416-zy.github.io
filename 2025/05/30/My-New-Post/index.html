@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"My New Post","path":"2025/05/30/My-New-Post/"},{"title":"My New Post","path":"2025/05/30/My-New-Post-1/"},{"title":"Hello World","path":"2025/05/09/hello-world/"}]`)
+  const posts = JSON.parse(`[{"title":"My New Post","path":"2025/05/30/My-New-Post-1/"},{"title":"My New Post","path":"2025/05/30/My-New-Post/"},{"title":"Hello World","path":"2025/05/09/hello-world/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -515,7 +515,7 @@
   }
 
   setOperateItem()
-  const musics = JSON.parse(`[{"name":"瞬","artist":"郑润泽","url":"music/瞬.mp3","cover":"/imgs/shun.webp"},{"name":"致你","artist":"王赫野","url":"music/致你！王赫野.mp3","cover":"/"}]`)
+  const musics = JSON.parse(`[{"name":"第57次取消发送","artist":"不知名","url":"music/第57次取消发送.mp3","cover":"/imgs/cc.jpg"},{"name":"瞬","artist":"郑润泽","url":"music/瞬.mp3","cover":"/imgs/cc.jpg"},{"name":"想你时风起","artist":"单依纯","url":"music/想你时风起-单依纯.mp3","cover":"/imgs/cc.jpg"},{"name":"心许百年","artist":"c","url":"music/心许百年.mp3","cover":"/imgs/cc.jpg"},{"name":"🐟","artist":"鱼仔","url":"music/鱼仔.mp3","cover":"/imgs/cc.jpg"},{"name":"致你","artist":"王赫野","url":"music/致你！王赫野.mp3","cover":"/imgs/cc.jpg"}]`)
   const ap = new APlayer({
     container: document.querySelector('#aplayer'),
     audio: musics,
