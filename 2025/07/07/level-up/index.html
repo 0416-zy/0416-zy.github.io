@@ -374,7 +374,7 @@
     </div>
     <article class="article-content markdown-body">
       <p>打开题目发现啥都没有嘞，那就想到要扫一下目录</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2025/png/55814575/1751183909558-fc0de5cd-49e5-425f-8e9f-f055b9d61653.png" alt="img"></p>
+<p><img src="/img/1751183909558-fc0de5cd-49e5-425f-8e9f-f055b9d61653.png" alt="img"></p>
 <p>发现robots.txt文件，访问一下发现源码的php文件</p>
 <p>源码level2</p>
 <p><a target="_blank" rel="noopener" href="http://node5.anna.nssctf.cn:27960/level_2_1s_h3re.php">http://node5.anna.nssctf.cn:27960/level_2_1s_h3re.php</a></p>
@@ -438,7 +438,7 @@
 <p>输入md5(‘ffifdyop’,true)绕过</p>
 <p>即</p>
 <p>select * from ‘admin’ where password&#x3D;md5 ( ‘ ffifdyop ‘ ,true)md5(string,raw)</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2025/png/55814575/1751184039722-c0ae6367-305a-453b-82b5-66226b3c4419.png" alt="img"></p>
+<p><img src="/img/1751184039722-c0ae6367-305a-453b-82b5-66226b3c4419.png" alt="img"></p>
 <p>绕过原理：</p>
 <p><img src="https://cdn.nlark.com/yuque/0/2025/png/55814575/1751184055625-51348bac-32fe-4b45-8c8b-13f36d8432db.png" alt="img"></p>
 <p>接着做题ffifdyop 这个字符串被 md5 哈希了后会变成 276f722736c95d99e921722cf9ed621c，这个字符串前几位刚好是’ or ‘6而 Mysql 刚好又会把 hex 转成 ascii 解释，因此拼接之后的形式是 select * from ‘admin’ where password&#x3D; ‘ ‘ or ‘6xxxxx ‘，等价于 or 一个永真式，因此相当于万能密码，可以绕过md5()函数。</p>
@@ -452,7 +452,7 @@
 <hr>
 <p>level 2 md5强碰撞</p>
 <p>从上面的知识点中找两个符合标准的值直接post传参，发现可能是因为参数太复杂，直接在网页上post传参不行，那就bp抓包传参，但是发现抓包是get传参，搜一下如何利用bppost传参</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2025/png/55814575/1751184098948-c1193415-fc2f-480c-862d-25b19d76acc0.png" alt="img"></p>
+<p><img src="/img/1751184098948-c1193415-fc2f-480c-862d-25b19d76acc0.png" alt="img"></p>
 <p>先将get改为post，然后再加上</p>
 <p>Content-Type: application&#x2F;x-www-form-urlencoded，再在下面加入我们像传参的内容即可</p>
 <p>思考为啥不能用数组绕过而只能通过在找到两个md5值完全相同的字符串达到绕过的目的</p>
@@ -462,11 +462,11 @@
 <ol>
 <li>(string)转换 → 保持二进制字符串不变</li>
 </ol>
-<p><img src="https://cdn.nlark.com/yuque/0/2025/png/55814575/1751184128630-b0f11e32-59e4-4af0-a4a1-69bfe0600771.png" alt="img"></p>
+<p><img src="/img/1751184128630-b0f11e32-59e4-4af0-a4a1-69bfe0600771.png" alt="img"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"> //here is level 3 </span><br><span class="line"> error_reporting(0); </span><br><span class="line"> include &quot;str.php&quot;;</span><br><span class="line"> if (isset($_POST[&#x27;array1&#x27;]) &amp;&amp; isset($_POST[&#x27;array2&#x27;]))&#123;   $a1 = (string)$_POST[&#x27;array1&#x27;];  </span><br><span class="line">$a2 = (string)$_POSTarray2&#x27;];   </span><br><span class="line">if ($a1 == $a2)&#123;     die(&quot;????&quot;);   &#125;   </span><br><span class="line">if (sha1($a1) === sha1($a2))&#123;     </span><br><span class="line">echo $level4; </span><br><span class="line">&#125;else&#123;     </span><br><span class="line">die(&quot;level 3 failed ...&quot;);   </span><br><span class="line">   &#125; </span><br><span class="line">&#125; </span><br><span class="line">else&#123;   </span><br><span class="line">show_source(__FILE__); </span><br><span class="line">&#125; ?&gt;</span><br></pre></td></tr></table></figure>
 
 <p>审计代码发现是sha1的强碰撞</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2025/png/55814575/1751184151304-3f600bb3-f008-4c07-bf42-7ee7143b7b7b.png" alt="img"></p>
+<p><img src="/img/1751184151304-3f600bb3-f008-4c07-bf42-7ee7143b7b7b.png" alt="img"></p>
 <p>level4</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">//here is last level</span><br><span class="line">    error_reporting(0);</span><br><span class="line">    include &quot;str.php&quot;;</span><br><span class="line">    show_source(__FILE__);</span><br><span class="line"></span><br><span class="line">    $str = parse_url($_SERVER[&#x27;REQUEST_URI&#x27;]);</span><br><span class="line">    if($str[&#x27;query&#x27;] == &quot;&quot;)&#123;</span><br><span class="line">        echo &quot;give me a parameter&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    if(preg_match(&#x27;/ |_|20|5f|2e|\./&#x27;,$str[&#x27;query&#x27;]))&#123;</span><br><span class="line">        die(&quot;blacklist here&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    if($_GET[&#x27;NI_SA_&#x27;] === &quot;txw4ever&quot;)&#123;</span><br><span class="line">        die($level5);</span><br><span class="line">    &#125;</span><br><span class="line">    else&#123;</span><br><span class="line">        die(&quot;level 4 failed ...&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">?&gt;</span><br><span class="line">give me a parameterlevel 4 failed ...</span><br></pre></td></tr></table></figure>
 
