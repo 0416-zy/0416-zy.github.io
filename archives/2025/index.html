@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"pop","path":"2025/07/07/pop/"}]`)
+  const posts = JSON.parse(`[{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"pop","path":"2025/07/07/pop/"},{"title":"XXE","path":"2025/08/16/XXE/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -258,13 +258,13 @@
       <div class="main-left--statics">
         <a href="/categories">
           <div>
-            <span>3</span>
+            <span>4</span>
             <span>分类</span>
           </div>
         </a>
         <a href="/tags">
           <div>
-            <span>5</span>
+            <span>6</span>
             <span>标签</span>
           </div>
         </a>
@@ -327,7 +327,7 @@
       </h5>
       <p class="main-left--subtitle">
         <span>文章数目：</span>
-        <span>5 篇</span>
+        <span>6 篇</span>
       </p>
       <p class="main-left--subtitle">
         <span>最近动态：</span>
@@ -335,7 +335,7 @@
       </p>
       <p class="main-left--subtitle">
         <span>上线时间：</span>
-        <span>77天</span>
+        <span>79天</span>
       </p>
       <p class="main-left--subtitle">
         <span>当前版本：</span>
@@ -358,6 +358,78 @@
       <div class="index-article">
         <!-- <img class="index-article--cover" src="/imgs/default-cover.webp" alt=""> -->
         <div class="index-article--box">
+          <img class="index-article--cover" data-cover="imgs/default-cover.webp" alt="XXE" />
+        </div>
+        <div class="index-article--content">
+          <a href="/2025/08/16/XXE/">XXE </a>
+          <div>
+            
+              <p>
+                <a class="post-category-link" href="/categories/XXXXE/">XXXXE</a>
+              </p>
+            
+            
+              <p>
+                <a class="-link" href="/tags/XXE/" rel="tag">XXE</a>
+              </p>
+            
+          </div>
+          <div class="bg"></div>
+        </div>
+      </div>
+    
+      <div class="index-article">
+        <!-- <img class="index-article--cover" src="/imgs/default-cover.webp" alt=""> -->
+        <div class="index-article--box">
+          <img class="index-article--cover" data-cover="imgs/default-cover.webp" alt="1zweb" />
+        </div>
+        <div class="index-article--content">
+          <a href="/2025/07/09/1zweb/">1zweb </a>
+          <div>
+            
+              <p>
+                <a class="post-category-link" href="/categories/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">Phar反序列化</a>
+              </p>
+            
+            
+              <p>
+                <a class="-link" href="/tags/1zweb/" rel="tag">1zweb</a>
+              </p>
+            
+          </div>
+          <div class="bg"></div>
+        </div>
+      </div>
+    
+      <div class="index-article">
+        <!-- <img class="index-article--cover" src="/imgs/default-cover.webp" alt=""> -->
+        <div class="index-article--box">
+          <img class="index-article--cover" data-cover="imgs/default-cover.webp" alt="pop" />
+        </div>
+        <div class="index-article--content">
+          <a href="/2025/07/07/pop/">pop </a>
+          <div>
+            
+              <p>
+                <a class="post-category-link" href="/categories/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96pop/">反序列化Pop</a>
+              </p>
+            
+            
+              <p>
+                <a class="-link" href="/tags/pop/" rel="tag">pop</a>
+              </p>
+            
+          </div>
+          <div class="bg"></div>
+        </div>
+      </div>
+    
+  </div>
+  <div class="index-center">
+    
+      <div class="index-article">
+        <!-- <img class="index-article--cover" data-cover="" src="/imgs/default-cover.webp" alt=""> -->
+        <div class="index-article--box">
           <img class="index-article--cover" data-cover="imgs/default-cover.webp" alt="SSRF漏洞" />
         </div>
         <div class="index-article--content">
@@ -375,7 +447,7 @@
       </div>
     
       <div class="index-article">
-        <!-- <img class="index-article--cover" src="/imgs/default-cover.webp" alt=""> -->
+        <!-- <img class="index-article--cover" data-cover="" src="/imgs/default-cover.webp" alt=""> -->
         <div class="index-article--box">
           <img class="index-article--cover" data-cover="imgs/default-cover.webp" alt="babyserialize" />
         </div>
@@ -384,7 +456,7 @@
           <div>
             
               <p>
-                <a class="post-category-link" href="/categories/%E5%B7%A7%E5%A6%99%E8%B0%83%E7%94%A8%E9%AD%94%E6%B3%95%E5%87%BD%E6%95%B0/">巧妙调用魔法函数</a>
+                <a class="category-link" href="/categories/%E5%B7%A7%E5%A6%99%E8%B0%83%E7%94%A8%E9%AD%94%E6%B3%95%E5%87%BD%E6%95%B0/">巧妙调用魔法函数</a>
               </p>
             
             
@@ -398,7 +470,7 @@
       </div>
     
       <div class="index-article">
-        <!-- <img class="index-article--cover" src="/imgs/default-cover.webp" alt=""> -->
+        <!-- <img class="index-article--cover" data-cover="" src="/imgs/default-cover.webp" alt=""> -->
         <div class="index-article--box">
           <img class="index-article--cover" data-cover="imgs/default-cover.webp" alt="level-up" />
         </div>
@@ -417,60 +489,11 @@
       </div>
     
   </div>
-  <div class="index-center">
-    
-      <div class="index-article">
-        <!-- <img class="index-article--cover" data-cover="" src="/imgs/default-cover.webp" alt=""> -->
-        <div class="index-article--box">
-          <img class="index-article--cover" data-cover="imgs/default-cover.webp" alt="1zweb" />
-        </div>
-        <div class="index-article--content">
-          <a href="/2025/07/09/1zweb/">1zweb </a>
-          <div>
-            
-              <p>
-                <a class="category-link" href="/categories/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">Phar反序列化</a>
-              </p>
-            
-            
-              <p>
-                <a class="-link" href="/tags/1zweb/" rel="tag">1zweb</a>
-              </p>
-            
-          </div>
-          <div class="bg"></div>
-        </div>
-      </div>
-    
-      <div class="index-article">
-        <!-- <img class="index-article--cover" data-cover="" src="/imgs/default-cover.webp" alt=""> -->
-        <div class="index-article--box">
-          <img class="index-article--cover" data-cover="imgs/default-cover.webp" alt="pop" />
-        </div>
-        <div class="index-article--content">
-          <a href="/2025/07/07/pop/">pop </a>
-          <div>
-            
-              <p>
-                <a class="category-link" href="/categories/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96pop/">反序列化Pop</a>
-              </p>
-            
-            
-              <p>
-                <a class="-link" href="/tags/pop/" rel="tag">pop</a>
-              </p>
-            
-          </div>
-          <div class="bg"></div>
-        </div>
-      </div>
-    
-  </div>
   <div class="index-right">
     <div class="index-right-wrapper">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">Phar反序列化</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96pop/">反序列化Pop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A7%E5%A6%99%E8%B0%83%E7%94%A8%E9%AD%94%E6%B3%95%E5%87%BD%E6%95%B0/">巧妙调用魔法函数</a></li></ul>
-      <ul class="tags" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/pop/" rel="tag">pop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/level-up/" rel="tag">level-up</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/babyserialize/" rel="tag">babyserialize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSRF/" rel="tag">SSRF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/1zweb/" rel="tag">1zweb</a></li></ul>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/08/">2025年08月</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">2025年07月</a><span class="archive-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/XXXXE/">XXXXE</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">Phar反序列化</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96pop/">反序列化Pop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A7%E5%A6%99%E8%B0%83%E7%94%A8%E9%AD%94%E6%B3%95%E5%87%BD%E6%95%B0/">巧妙调用魔法函数</a></li></ul>
+      <ul class="tags" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/pop/" rel="tag">pop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/level-up/" rel="tag">level-up</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/babyserialize/" rel="tag">babyserialize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/XXE/" rel="tag">XXE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSRF/" rel="tag">SSRF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/1zweb/" rel="tag">1zweb</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/08/">2025年08月</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">2025年07月</a><span class="archive-list-count">4</span></li></ul>
     </div>
   </div>
 </div>
