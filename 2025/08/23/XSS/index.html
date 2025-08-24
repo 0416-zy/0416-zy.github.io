@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"pop","path":"2025/07/07/pop/"}]`)
+  const posts = JSON.parse(`[{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"pop","path":"2025/07/07/pop/"},{"title":"CSRF","path":"2025/08/24/CSRF/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -239,8 +239,8 @@
       <div class="main-left--intro">
         <p class="main-left--name">zz</p>
         <div class="main-left--tags">
-          <span class="main-left--tag">拧巴</span>
-          <span class="main-left--tag">贪吃</span>
+          <span class="main-left--tag">边清零边拥有</span>
+          <span class="main-left--tag"></span>
         </div>
       </div>
     </div>
@@ -258,13 +258,13 @@
       <div class="main-left--statics">
         <a href="/categories">
           <div>
-            <span>5</span>
+            <span>6</span>
             <span>分类</span>
           </div>
         </a>
         <a href="/tags">
           <div>
-            <span>7</span>
+            <span>8</span>
             <span>标签</span>
           </div>
         </a>
@@ -327,7 +327,7 @@
       </h5>
       <p class="main-left--subtitle">
         <span>文章数目：</span>
-        <span>7 篇</span>
+        <span>8 篇</span>
       </p>
       <p class="main-left--subtitle">
         <span>最近动态：</span>
@@ -335,7 +335,7 @@
       </p>
       <p class="main-left--subtitle">
         <span>上线时间：</span>
-        <span>86天</span>
+        <span>87天</span>
       </p>
       <p class="main-left--subtitle">
         <span>当前版本：</span>
@@ -420,7 +420,7 @@
 <p>可能触发DOM型XSS的属性</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">document.referer</span><br><span class="line">window.name</span><br><span class="line">location</span><br><span class="line">innerHTML</span><br><span class="line">documen.write</span><br></pre></td></tr></table></figure>
 
-<h3 id="-1"><a href="#-1" class="headerlink" title=""></a></h3><h3 id="-2"><a href="#-2" class="headerlink" title=""></a></h3><h3 id="反射型xss和DOM型xss"><a href="#反射型xss和DOM型xss" class="headerlink" title="反射型xss和DOM型xss"></a>反射型xss和DOM型xss</h3><table>
+<h3 id="反射型xss和DOM型xss"><a href="#反射型xss和DOM型xss" class="headerlink" title="反射型xss和DOM型xss"></a>反射型xss和DOM型xss</h3><table>
 <thead>
 <tr>
 <th>特性</th>
@@ -592,7 +592,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt; &lt;sCript&gt;alert()&lt;/sCript&gt;</span><br></pre></td></tr></table></figure>
 
 <p><strong>大小写法</strong>绕过str_replace()函数 </p>
-<h3 id="-3"><a href="#-3" class="headerlink" title=""></a></h3><h3 id="level7"><a href="#level7" class="headerlink" title="level7"></a>level7</h3><p>目前为止我们已经学习了很多关键字</p>
+<h3 id="-1"><a href="#-1" class="headerlink" title=""></a></h3><h3 id="level7"><a href="#level7" class="headerlink" title="level7"></a>level7</h3><p>目前为止我们已经学习了很多关键字</p>
 <p>目前遇到的绕过手法也就这些，我们将这些关键字转换大小写之后传入看看怎么个事</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; OnFocus &lt;sCriPt&gt; &lt;a hReF=javascript:alert()&gt;</span><br></pre></td></tr></table></figure>
 
@@ -708,10 +708,10 @@
 <p>PHP中常见的接收参数的方式有<code>$_GET</code>、<code>$_POST</code>、<code>$_REQUEST</code>等等，可以搜索所有接收参数的地方。然后对接收到的数据进行跟踪，看看有没有输出到页面中，然后看输出到页面中的数据是否进行了过滤和<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=176561629&content_type=Article&match_order=1&q=html%E7%BC%96%E7%A0%81&zhida_source=entity">html编码</a>等处理。</p>
 <p>也可以搜索类似<code>echo</code>这样的输出语句，跟踪输出的变量是从哪里来的，我们是否能控制，如果从数据库中取的，是否能控制存到数据库中的数据，存到数据库之前有没有进行过滤等等。</p>
 <p>大多数程序会对接收参数封装在公共文件的函数中统一调用，我们就需要审计这些公共函数看有没有过滤，能否绕过等等。</p>
-<h3 id="-4"><a href="#-4" class="headerlink" title=""></a></h3><p>小白如我，肯定还是从大佬的文章中习得的知识</p>
+<h3 id="-2"><a href="#-2" class="headerlink" title=""></a></h3><p>小白如我，肯定还是从大佬的文章中习得的知识</p>
 <p>上面提到过</p>
 <p>后面加练几道pikachu靶场里的题</p>
-<h2 id="pikachu靶场"><a href="#pikachu靶场" class="headerlink" title="pikachu靶场"></a>pikachu靶场</h2><h3 id="-5"><a href="#-5" class="headerlink" title=""></a></h3><h3 id="DOM型xss"><a href="#DOM型xss" class="headerlink" title="DOM型xss"></a>DOM型xss</h3><p>打开题目看到一个搜索框，随便输入一个scirpt标签之后，输入框底下出现一行英文，大概率是一个超链接</p>
+<h2 id="pikachu靶场"><a href="#pikachu靶场" class="headerlink" title="pikachu靶场"></a>pikachu靶场</h2><h3 id="-3"><a href="#-3" class="headerlink" title=""></a></h3><h3 id="DOM型xss"><a href="#DOM型xss" class="headerlink" title="DOM型xss"></a>DOM型xss</h3><p>打开题目看到一个搜索框，随便输入一个scirpt标签之后，输入框底下出现一行英文，大概率是一个超链接</p>
 <p>我们右键查看页面源代码，找到这行英文所在地</p>
 <p>果不其然是有一段js代码</p>
 <p><img src="/2025/08/23/XSS/2fc07c141a5a45b4806039cd17ffd99d.png" alt="img"></p>
@@ -770,10 +770,15 @@
     <div class="article-catelogue--wrapper">
       <div class="catelogue catelogue-1">
         <h3>目录</h3>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS"><span class="toc-number">1.</span> <span class="toc-text">XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%86%E7%B1%BB"><span class="toc-number">1.1.</span> <span class="toc-text">原理和分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%9E%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">存储型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">1.1.2.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8B"><span class="toc-number">1.1.3.</span> <span class="toc-text">反射型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM%E5%9E%8B"><span class="toc-number">1.1.4.</span> <span class="toc-text">DOM型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-1"><span class="toc-number">1.1.5.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-2"><span class="toc-number">1.1.6.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8Bxss%E5%92%8CDOM%E5%9E%8Bxss"><span class="toc-number">1.1.7.</span> <span class="toc-text">反射型xss和DOM型xss</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1"><span class="toc-number">1.1.8.</span> <span class="toc-text">防御</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss-labs"><span class="toc-number">1.2.</span> <span class="toc-text">xss-labs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#level1"><span class="toc-number">1.2.1.</span> <span class="toc-text">level1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level2"><span class="toc-number">1.2.2.</span> <span class="toc-text">level2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level3"><span class="toc-number">1.2.3.</span> <span class="toc-text">level3</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#onfocus%E4%BA%8B%E4%BB%B6%E7%BB%95%E8%BF%87"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">onfocus事件绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#javascript%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">javascript伪协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E8%81%94%E4%BA%8B%E4%BB%B6%E5%B1%9E%E6%80%A7"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">内联事件属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xss%E8%A7%A6%E5%8F%91%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.3.4.</span> <span class="toc-text">xss触发标签</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level5"><span class="toc-number">1.2.4.</span> <span class="toc-text">level5</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#a-href%E6%A0%87%E7%AD%BE%E6%B3%95"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">a href标签法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level6"><span class="toc-number">1.2.5.</span> <span class="toc-text">level6</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-3"><span class="toc-number">1.2.6.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level7"><span class="toc-number">1.2.7.</span> <span class="toc-text">level7</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level8"><span class="toc-number">1.2.8.</span> <span class="toc-text">level8</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level9"><span class="toc-number">1.2.9.</span> <span class="toc-text">level9</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level10"><span class="toc-number">1.2.10.</span> <span class="toc-text">level10</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level11"><span class="toc-number">1.2.11.</span> <span class="toc-text">level11</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level12"><span class="toc-number">1.2.12.</span> <span class="toc-text">level12</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level13"><span class="toc-number">1.2.13.</span> <span class="toc-text">level13</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level15"><span class="toc-number">1.2.14.</span> <span class="toc-text">level15</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ng-include%EF%BC%9A"><span class="toc-number">1.2.14.1.</span> <span class="toc-text">ng-include：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level16"><span class="toc-number">1.2.15.</span> <span class="toc-text">level16</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level17"><span class="toc-number">1.2.16.</span> <span class="toc-text">level17</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#embed%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.16.1.</span> <span class="toc-text">embed标签</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98"><span class="toc-number">1.3.</span> <span class="toc-text">xss漏洞挖掘</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-4"><span class="toc-number">1.3.1.</span> <span class="toc-text"></span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pikachu%E9%9D%B6%E5%9C%BA"><span class="toc-number">1.4.</span> <span class="toc-text">pikachu靶场</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-5"><span class="toc-number">1.4.1.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM%E5%9E%8Bxss"><span class="toc-number">1.4.2.</span> <span class="toc-text">DOM型xss</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM%E5%9E%8Bxss-x"><span class="toc-number">1.4.3.</span> <span class="toc-text">DOM型xss-x</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xss%E4%B9%8B%E7%9B%B2%E6%89%93"><span class="toc-number">1.4.4.</span> <span class="toc-text">xss之盲打</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS"><span class="toc-number">1.</span> <span class="toc-text">XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%86%E7%B1%BB"><span class="toc-number">1.1.</span> <span class="toc-text">原理和分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%9E%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">存储型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">1.1.2.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8B"><span class="toc-number">1.1.3.</span> <span class="toc-text">反射型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM%E5%9E%8B"><span class="toc-number">1.1.4.</span> <span class="toc-text">DOM型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8Bxss%E5%92%8CDOM%E5%9E%8Bxss"><span class="toc-number">1.1.5.</span> <span class="toc-text">反射型xss和DOM型xss</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1"><span class="toc-number">1.1.6.</span> <span class="toc-text">防御</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss-labs"><span class="toc-number">1.2.</span> <span class="toc-text">xss-labs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#level1"><span class="toc-number">1.2.1.</span> <span class="toc-text">level1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level2"><span class="toc-number">1.2.2.</span> <span class="toc-text">level2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level3"><span class="toc-number">1.2.3.</span> <span class="toc-text">level3</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#onfocus%E4%BA%8B%E4%BB%B6%E7%BB%95%E8%BF%87"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">onfocus事件绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#javascript%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">javascript伪协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E8%81%94%E4%BA%8B%E4%BB%B6%E5%B1%9E%E6%80%A7"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">内联事件属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xss%E8%A7%A6%E5%8F%91%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.3.4.</span> <span class="toc-text">xss触发标签</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level5"><span class="toc-number">1.2.4.</span> <span class="toc-text">level5</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#a-href%E6%A0%87%E7%AD%BE%E6%B3%95"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">a href标签法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level6"><span class="toc-number">1.2.5.</span> <span class="toc-text">level6</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-1"><span class="toc-number">1.2.6.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level7"><span class="toc-number">1.2.7.</span> <span class="toc-text">level7</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level8"><span class="toc-number">1.2.8.</span> <span class="toc-text">level8</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level9"><span class="toc-number">1.2.9.</span> <span class="toc-text">level9</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level10"><span class="toc-number">1.2.10.</span> <span class="toc-text">level10</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level11"><span class="toc-number">1.2.11.</span> <span class="toc-text">level11</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level12"><span class="toc-number">1.2.12.</span> <span class="toc-text">level12</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level13"><span class="toc-number">1.2.13.</span> <span class="toc-text">level13</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level15"><span class="toc-number">1.2.14.</span> <span class="toc-text">level15</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ng-include%EF%BC%9A"><span class="toc-number">1.2.14.1.</span> <span class="toc-text">ng-include：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level16"><span class="toc-number">1.2.15.</span> <span class="toc-text">level16</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#level17"><span class="toc-number">1.2.16.</span> <span class="toc-text">level17</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#embed%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.16.1.</span> <span class="toc-text">embed标签</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98"><span class="toc-number">1.3.</span> <span class="toc-text">xss漏洞挖掘</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-2"><span class="toc-number">1.3.1.</span> <span class="toc-text"></span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pikachu%E9%9D%B6%E5%9C%BA"><span class="toc-number">1.4.</span> <span class="toc-text">pikachu靶场</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-3"><span class="toc-number">1.4.1.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM%E5%9E%8Bxss"><span class="toc-number">1.4.2.</span> <span class="toc-text">DOM型xss</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM%E5%9E%8Bxss-x"><span class="toc-number">1.4.3.</span> <span class="toc-text">DOM型xss-x</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xss%E4%B9%8B%E7%9B%B2%E6%89%93"><span class="toc-number">1.4.4.</span> <span class="toc-text">xss之盲打</span></a></li></ol></li></ol></li></ol>
       </div>
       
         <div class="catelogue catelogue-2">
+          
+            <p>
+              <span>上一篇：</span>
+              <a href="/2025/08/24/CSRF/">CSRF</a>
+            </p>
            
           
             <p>
