@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"pop","path":"2025/07/07/pop/"},{"title":"CSRF","path":"2025/08/24/CSRF/"}]`)
+  const posts = JSON.parse(`[{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"CSRF","path":"2025/08/24/CSRF/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"pop","path":"2025/07/07/pop/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -376,16 +376,16 @@
       <h1 id="CSRF漏洞"><a href="#CSRF漏洞" class="headerlink" title="CSRF漏洞"></a>CSRF漏洞</h1><h2 id="CSRF原理"><a href="#CSRF原理" class="headerlink" title="CSRF原理"></a>CSRF原理</h2><p>CSRF (Cross-site request forgery，跨站请求伪造)是一种对网站的恶意利用。尽管听起来像跨站脚本(XSS)，但它与XSS非常不同，XSS利用站点内的信任用户，而<strong>CSRF则通过伪装成受信任用户请求受信任的网站</strong>。</p>
 <p><strong>核心思想：</strong> 攻击者诱骗一个已经认证（已登录） 的用户，在不知情的情况下，执行一个非本意的操作（如修改密码、转账、发邮件等）。</p>
 <p><strong>关键前提：</strong> 用户必须在目标网站（例如银行网站 bank.com）上处于已登录状态（会话有效）。</p>
-<p><img src="/2025/07/09/1zweb/7a9fa8c79673f85628145d90f21736a.png" alt="img"></p>
+<p><img src="/2025/08/24/CSRF/27a9fa8c79673f85628145d90f21736a.png" alt="img"></p>
 <p>此图的攻击流程</p>
 <p>1、客户端通过账户密码登录访问网站A。<br>2、网站A验证客户端的账号密码，成功则生成一个sessionlD，并返回给客户端存储在浏览器中。<br>3、该客户端Tab—个新页面访问了网站B。<br>4、网站B自动触发要求该客户端访问网站A。(即在网站B中有链接指向网站A)<br>5、客户端通过网站B中的链接访问网站A。(此时携带有合法的SessionID进行访问站A的)<br>6、此时网站A只需检验sessionIlD是否合法，合法则执行相应的操作。(因此具体啥工具就得看链接，以及网站B要求访问时携带的数据)</p>
 <p>能完成csrf攻击，必须同时满足两个条件：</p>
 <p>登录受信任的网站A，并在本地生成cookie，在不等出A的情况下，访问危险网站B</p>
 <h2 id="CSRF分类"><a href="#CSRF分类" class="headerlink" title="CSRF分类"></a>CSRF分类</h2><h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="GET型的CSRF"><a href="#GET型的CSRF" class="headerlink" title="GET型的CSRF"></a>GET型的CSRF</h3><h4 id="靶场演示"><a href="#靶场演示" class="headerlink" title="靶场演示"></a>靶场演示</h4><p>我们直接用pikachu靶场来进行学习</p>
 <p>首先我们登录进页面</p>
-<p><img src="/2025/07/09/1zweb/48eb468f5b0df843b43018bf10b2822.png" alt="img"></p>
+<p><img src="/2025/08/24/CSRF/948eb468f5b0df843b43018bf10b2822.png" alt="img"></p>
 <p>发现能进行修改个人信息，那我们随便修改一个地址试试，与此同时抓包看一下这是怎么进行个人信息修改的</p>
-<p><img src="/2025/07/09/1zweb/dff5dd9b8b695b02756d0c82436ec3a.png" alt="img"></p>
+<p><img src="/2025/08/24/CSRF/bdff5dd9b8b695b02756d0c82436ec3a.png" alt="img"></p>
 <p>那下面我们就模拟一下get型的csrf攻击</p>
 <p>1.拿到get请求的形式（这里只要攻击者也登入这个界面然后也修改一下个人信息就能拿到这个请求）</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /pikachu/vul/csrf/csrfget/csrf_get_edit.php?sex=girl&amp;phonenum=18656565545&amp;add=china&amp;email=lili%40pikachu.com&amp;submit=submit</span><br></pre></td></tr></table></figure>
@@ -395,9 +395,9 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.1.6/pikachu/vul/csrf/csrfget/csrf_get_edit.php?sex=girl&amp;phonenum=18656565545&amp;add=beijing&amp;email=lili%40pikachu.com&amp;submit=submit</span><br></pre></td></tr></table></figure>
 
 <p>3.然后将这个链接发给lili这个用户，再诱导她在登录pikachu平台的情况下，点击这个链接</p>
-<p><img src="/2025/07/09/1zweb/c6f8fbf5b4845344235039e83060625.png" alt="img"></p>
+<p><img src="/2025/08/24/CSRF/5c6f8fbf5b4845344235039e83060625.png" alt="img"></p>
 <p>4.达到目的成功修改lili的信息</p>
-<p><img src="/2025/07/09/1zweb/7f38b78c0e54fd7a2bebab492e9fb65.png" alt="img"></p>
+<p><img src="/2025/08/24/CSRF/d7f38b78c0e54fd7a2bebab492e9fb65.png" alt="img"></p>
 <h4 id="实例演示"><a href="#实例演示" class="headerlink" title="实例演示"></a>实例演示</h4><p><strong>场景设定</strong><br>假设有一个非常简单的银行应用 vulnerable-bank.com，它使用 <strong>GET 请求来处理转账功能</strong>。这是非常糟糕的设计，但正因如此，它能完美地展示最直接的CSRF攻击。</p>
 <ol>
 <li>转账功能URL：<br><a target="_blank" rel="noopener" href="http://vulnerable-bank.com/transfer?to=%E7%9B%AE%E6%A0%87%E8%B4%A6%E6%88%B7&amount=%E9%87%91%E9%A2%9D">http://vulnerable-bank.com/transfer?to=目标账户&amp;amount=金额</a></li>
@@ -428,11 +428,11 @@
 <p>6.攻击完成： 攻击在Alice毫不知情的情况下完成了。她只是在看一个“中奖”页面，而她的钱已经被转走了。浏览器可能会显示一个“图片加载失败”的错误（因为服务器返回的是转账成功的HTML页面，不是图片），但用户根本不会在意。</p>
 <h3 id="-1"><a href="#-1" class="headerlink" title=""></a></h3><h3 id="POST型的CSRF"><a href="#POST型的CSRF" class="headerlink" title="POST型的CSRF"></a>POST型的CSRF</h3><h4 id="靶场演示-1"><a href="#靶场演示-1" class="headerlink" title="靶场演示"></a>靶场演示</h4><p>这一关登录进去和第一关是一样的</p>
 <p>进入修改信息界面，点击提交进行抓包</p>
-<p><img src="/2025/07/09/1zweb/ae07ac8eed71eb00969a14cbaeaf778.png" alt="img"></p>
+<p><img src="/2025/08/24/CSRF/cae07ac8eed71eb00969a14cbaeaf778.png" alt="img"></p>
 <p>既然这样的话那就不能和上一关一样使用url伪造的方法了</p>
 <p>那我们就用和xss漏洞相似的方法，我们构造一个恶意站点，将POST请求隐藏在站点中的表单中，然后诱导这个用户点击我们的恶意站点，当用户点击后触发表单，数据就会被post达到存在csrf漏洞的网站，用户信息就会被恶意修改</p>
 <p>根据原本网站界面的表单构造我们的post请求</p>
-<p><img src="/2025/07/09/1zweb/60f9c40d63908366f9bf0f0eafb807c.png" alt="img"></p>
+<p><img src="/2025/08/24/CSRF/a60f9c40d63908366f9bf0f0eafb807c.png" alt="img"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;script&gt;                                                                                                       &lt;!-- 这个script是用来自动提交表单的 --&gt;</span><br><span class="line">        window.onload = function() &#123;</span><br><span class="line">        document.getElementById(&quot;submit&quot;).click();</span><br><span class="line">        &#125;</span><br><span class="line">    &lt;/script&gt;              </span><br><span class="line">    &lt;body&gt;</span><br><span class="line">            &lt;form action=&quot;http://www.pikachu.com:90/vul/csrf/csrfpost/csrf_post_edit.php&quot; method=&quot;POST&quot;&gt;    </span><br><span class="line">                &lt;input type=&quot;hidden&quot; name=&quot;sex&quot; value=&quot;girl&quot; /&gt;</span><br><span class="line">                &lt;input type=&quot;hidden&quot; name=&quot;phonenum&quot; value=&quot;123456789&quot; /&gt;</span><br><span class="line">                &lt;input type=&quot;hidden&quot; name=&quot;add&quot; value=&quot;usa&quot; /&gt;</span><br><span class="line">                &lt;input type=&quot;hidden&quot; name=&quot;email&quot; value=&quot;caker@pikachu.com&quot; /&gt;</span><br><span class="line">                &lt;input type=&quot;hidden&quot; name=&quot;submit&quot; value=&quot;submit&quot; /&gt;</span><br><span class="line">              &lt;input id=&quot;submit&quot; type=&quot;submit&quot; value=&quot;Submit request&quot; style=&quot;display:none&quot;/&gt;                    &lt;!-- style设置为display:none起到隐藏submit按钮的作用 --&gt;</span><br><span class="line">            &lt;/form&gt;</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">&lt;/html&gt; </span><br></pre></td></tr></table></figure>
 
 <p>因为是本机操作所以就把这个csrf.html文件放在靶场底下的一个目录即可</p>
@@ -470,17 +470,17 @@
 <p>6.攻击完成： Alice的浏览器可能会跳转到银行转账成功的页面，或者停留在恶意网站（取决于表单的target属性）。无论哪种情况，转账操作都已经在后台静默完成。</p>
 <h2 id="CSRF漏洞的挖掘"><a href="#CSRF漏洞的挖掘" class="headerlink" title="CSRF漏洞的挖掘"></a>CSRF漏洞的挖掘</h2><p>1、最简单的方法就是抓取一个正常请求的数据包，如果没有Referer字段和token，那么极有可能存在CSRF漏洞。</p>
 <p>2、如果有Referer字段，但是去掉Referer字段后再重新提交，如果该提交还有效，那么基本上可以确定存在CSRF漏洞。</p>
-<p><img src="/2025/07/09/1zweb/eepseek_mermaid_20250824_a89491.png" alt="img"></p>
+<p><img src="/2025/08/24/CSRF/deepseek_mermaid_20250824_a89491.png" alt="img"></p>
 <h2 id="CSRF漏洞的防御"><a href="#CSRF漏洞的防御" class="headerlink" title="CSRF漏洞的防御"></a>CSRF漏洞的防御</h2><p>防御四大金刚（从强到弱推荐）</p>
 <h4 id="CSRF-Token（防伪印章）"><a href="#CSRF-Token（防伪印章）" class="headerlink" title="CSRF Token（防伪印章）"></a>CSRF Token（防伪印章）</h4><p>是什么？</p>
 <p> 一个服务器生成的、随机且复杂的字符串（令牌）。每个用户会话的Token都不同，并且与当前会话绑定。</p>
 <p>怎么工作？</p>
 <p>1.发印章： 服务器在显示表单（或页面）时，生成一个Token，藏在表单里（如一个 <input type="hidden">），同时把这个Token记在服务器上（如Session里）。</p>
 <p>比如说，在刚刚的靶场里面用户lili想要修改自己的个人信息，那在lili点击这个修改个人信息的链接时，服务器在显示修改信息这个界面时，就会生成一个token，隐藏在返回给用户的界面里，顺便记录下这个token，每次刷新这个修改信息的界面时都会新生成新的token</p>
-<p><img src="/2025/07/09/1zweb/38504959dfcfc2c1b8d168dcc1a7c40.png" alt="img"></p>
+<p><img src="/2025/08/24/CSRF/a38504959dfcfc2c1b8d168dcc1a7c40.png" alt="img"></p>
 <p>2.盖印章： 用户提交表单时，这个Token会随着请求一起发给服务器。</p>
 <p>比如说，用户lili已经修改完自己的个人信息了，需要提交，提交的同时那个隐藏的token也会一起发给服务器</p>
-<p><img src="/2025/07/09/1zweb/bf6c2f52fcf8b79a6d463c31f310f55.png" alt="img"></p>
+<p><img src="/2025/08/24/CSRF/fbf6c2f52fcf8b79a6d463c31f310f55.png" alt="img"></p>
 <p>3.验印章： 服务器比较用户提交的Token和自己记下的Token是否一致。</p>
 <p>一致 → 是自己人，执行操作。</p>
 <p>不一致或没有 → 是伪造的请求，直接拒绝！</p>
@@ -488,7 +488,7 @@
 <p>坏人的网站无法知道这个Token是什么（因为浏览器同源策略，他读不到你的页面内容），所以他伪造的请求里永远缺少正确的“印章”。</p>
 <p>这个防御学完，我想到前面说的csrf的攻击原理 ，冒出来一个问题</p>
 <p>那个token不是藏在用户的会话session中吗，受害者在点击了攻击者的链接发起请求时浏览器不是会自带上用户的会话session吗，为什么攻击者没有用户的Token？？？？？？？？？？</p>
-<p><img src="/2025/07/09/1zweb/8f6a255c53883bdcbf1e99f0671cd34.png" alt="img"></p>
+<p><img src="/2025/08/24/CSRF/18f6a255c53883bdcbf1e99f0671cd34.png" alt="img"></p>
 <p>这样看来，Token确实很强大！</p>
 <h4 id="SameSite-Cookie（管家认门）"><a href="#SameSite-Cookie（管家认门）" class="headerlink" title="SameSite Cookie（管家认门）"></a>SameSite Cookie（管家认门）</h4><p>这种方法不改变请求本身，而是规范浏览器的行为。</p>
 <p>是什么？ </p>
@@ -657,7 +657,7 @@
   }
 
   setOperateItem()
-  const musics = JSON.parse(`[{"name":"第57次取消发送","artist":"不知名","url":"music/第57次取消发送.mp3","cover":"/imgs/cc.jpg"},{"name":"瞬","artist":"郑润泽","url":"music/瞬.mp3","cover":"/imgs/cc.jpg"},{"name":"想你时风起","artist":"单依纯","url":"music/想你时风起-单依纯.mp3","cover":"/imgs/cc.jpg"},{"name":"心许百年","artist":"c","url":"music/心许百年.mp3","cover":"/imgs/cc.jpg"},{"name":"🐟","artist":"鱼仔","url":"music/鱼仔.mp3","cover":"/imgs/cc.jpg"},{"name":"致你","artist":"王赫野","url":"music/致你！王赫野.mp3","cover":"/imgs/cc.jpg"},{"name":"沉溺","artist":"真源","url":"music/沉溺！沉溺.mp3","cover":"/imgs/cc.jpg"},{"name":"无尽的冒险","artist":"时团","url":"music/无尽的冒险！无尽的冒险.mp3","cover":"/imgs/cc.jpg"},{"name":"想自由","artist":"王安宇","url":"music/想自由！王安宇.mp3","cover":"/imgs/cc.jpg"}]`)
+  const musics = JSON.parse(`[{"name":"第57次取消发送","artist":"不知名","url":"music/第57次取消发送.mp3","cover":"/imgs/cc.jpg"},{"name":"瞬","artist":"郑润泽","url":"music/瞬.mp3","cover":"/imgs/cc.jpg"},{"name":"想你时风起","artist":"单依纯","url":"music/想你时风起-单依纯.mp3","cover":"/imgs/cc.jpg"},{"name":"心许百年","artist":"c","url":"music/心许百年.mp3","cover":"/imgs/cc.jpg"},{"name":"🐟","artist":"鱼仔","url":"music/鱼仔.mp3","cover":"/imgs/cc.jpg"},{"name":"致你","artist":"王赫野","url":"music/致你！王赫野.mp3","cover":"/imgs/cc.jpg"},{"name":"沉溺","artist":"真源","url":"music/沉溺.mp3","cover":"/imgs/cc.jpg"},{"name":"无尽的冒险","artist":"时团","url":"music/无尽的冒险.mp3","cover":"/imgs/cc.jpg"},{"name":"想自由","artist":"王安宇","url":"music/王安宇.mp3","cover":"/imgs/cc.jpg"}]`)
   const ap = new APlayer({
     container: document.querySelector('#aplayer'),
     audio: musics,
