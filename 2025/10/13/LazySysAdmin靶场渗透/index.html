@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"LazySysAdmin靶场渗透","path":"2025/10/13/LazySysAdmin靶场渗透/"},{"title":"CSRF","path":"2025/08/24/CSRF/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"pop","path":"2025/07/07/pop/"}]`)
+  const posts = JSON.parse(`[{"title":"CSRF","path":"2025/08/24/CSRF/"},{"title":"LazySysAdmin靶场渗透","path":"2025/10/13/LazySysAdmin靶场渗透/"},{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"pop","path":"2025/07/07/pop/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -258,13 +258,13 @@
       <div class="main-left--statics">
         <a href="/categories">
           <div>
-            <span>7</span>
+            <span>8</span>
             <span>分类</span>
           </div>
         </a>
         <a href="/tags">
           <div>
-            <span>8</span>
+            <span>9</span>
             <span>标签</span>
           </div>
         </a>
@@ -358,13 +358,13 @@
           
           <div class="article-info--categories">
             <span>分类：</span>
-            
+            <a class="category-link" href="/categories/LazySysAdmin/">LazySysAdmin</a>
           </div>
           
           
           <div class="article-info--tags">
             <span>标签：</span>
-            
+            <a class="tag-link" href="/tags/%E5%8C%BF%E5%90%8D%E5%85%B1%E4%BA%AB%E6%BC%8F%E6%B4%9E/" rel="tag">匿名共享漏洞</a>
           </div>
           
           <p class="article-info--date">日期：2025-10-13 22:32:40</p>
@@ -373,7 +373,101 @@
       </div>
     </div>
     <article class="article-content markdown-body">
-      
+      <h2 id="LazySysAdmin靶机渗透"><a href="#LazySysAdmin靶机渗透" class="headerlink" title="LazySysAdmin靶机渗透"></a>LazySysAdmin靶机渗透</h2><h3 id="靶机搭建"><a href="#靶机搭建" class="headerlink" title="靶机搭建"></a>靶机搭建</h3><p>靶机下载地址</p>
+<p><a target="_blank" rel="noopener" href="http://www.vulnhub.com/entry/lazysysadmin-1,205/">http://www.vulnhub.com/entry/lazysysadmin-1,205/</a></p>
+<p>下载好靶机环境，用VM导入就能使用</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/26cdb918116330635102d9ff8ceaad61.png" alt="img"></p>
+<h3 id="靶机渗透"><a href="#靶机渗透" class="headerlink" title="靶机渗透"></a>靶机渗透</h3><h4 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h4><h5 id="主机发现"><a href="#主机发现" class="headerlink" title="主机发现"></a>主机发现</h5><p>扫描同网段下所有存活的主机（工具：kali）</p>
+<p>因为靶机现在是NAT模式，并且我的VM也是自动获取ip的模式，所以在VM打开靶机之后，靶机就会被分配一个ip地址，现在我们要得到这个ip</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sn 192.168.240.0/24</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/40ac17943a6c82a3d587303c250a8178.png" alt="img"></p>
+<p>靶机ip是192.168.240.128</p>
+<h5 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sV 192.168.40.128</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/b010461eceb97b813ad9f3b46ebd211b.png" alt="img"></p>
+<p>根据扫描结果可知目标机开启了22、80、139、445、3306、6667这几个端口。</p>
+<p>端口有点多啊，我们直接目录爆破看看底下有啥</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python dirsearch.py -u &quot;http://192.168.240.128/&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/edf744e697ae96ee0cf6513ffc9d3614.png" alt="img"></p>
+<p>扫出来很多有用的目录，比如&#x2F;phpmyadmin , &#x2F;apache , &#x2F;wordpress&#x2F;,robots.txt 等</p>
+<p>那我们就进去看看，收集点信息</p>
+<p>使用curl获取目标web的<strong>banner信息</strong></p>
+<h6 id="banner信息"><a href="#banner信息" class="headerlink" title="banner信息"></a>banner信息</h6><p>banner信息是指在进行网络连接时，服务器向客户端发送的一段特定的数据。这段数据包 含了服务器的基本信息，包括服务器软件的名称、版本号、操作系统的信息以及一些其他相 关的信息。因此有了banner信息就可以来选择合适的协议和参数进行通信或者攻击。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -I 192.168.240.128</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/c66721a9647a695c9344a24bace65fbc.png" alt="img"></p>
+<p>发现使用的中间件是apache2.4.7，目标系统为Ubuntu。</p>
+<p>再来访问一下爬虫文件robots.txt</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/2100972a5d6e303aec5d3a227254f992.png" alt="img"></p>
+<p>挨个访问之后都没啥用啊</p>
+<p>继续看我们上面爆破出来的目录</p>
+<p>发现了一个wordpress登录页面和phpmyadmin,尝试登录（弱口令爆破，万能密码啥的）都不行，其实也能预料到，肯定是不会让咱轻轻松松登进去的</p>
+<p>先来学习一下<strong>wordpress</strong>是啥</p>
+<p>wordpress就是一个用 PHP 写的开源博客／网站建站程序</p>
+<p>从渗透视角来看</p>
+<p>登录入口默认 &#x2F;wp-login.php<br>后台 &#x2F;wp-admin&#x2F;<br>数据库配置在 wp-config.php（用户名、密码、表前缀）</p>
+<p><strong>phpMyAdmin</strong> 就是一个用网页方式管理 MySQL数据库的免费工具，默认用 root 或 db 用户 + 密码登录。</p>
+<p>现在我们是先做了一个基本的信息收集，好像这条现在是卡在这了，我们现在急需用户名和密码登入</p>
+<h4 id="匿名连接靶机共享目录"><a href="#匿名连接靶机共享目录" class="headerlink" title="匿名连接靶机共享目录"></a>匿名连接靶机共享目录</h4><p>回头看其实我们漏了一条路，根据实战套路顺序，我们namp端口看到139&#x2F;445之后，我们就应该立刻 smbclient -L -N</p>
+<p>插播一条，除了实战套路顺序，还可以用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enum4linux 192.168.240.128得到的信息，更加证实了我们有被白给的权限，直接smbclient交互拿到共享的文件</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/image-20251005202801041-17596672824051.png" alt="image-20251005202801041"></p>
+<p>&#x3D; SMB 空会话（null session）已建立，不需要任何凭证就能继续往下挖。</p>
+<h5 id="enum4linux"><a href="#enum4linux" class="headerlink" title="enum4linux"></a>enum4linux</h5><p>描述：Windows平台上曾经出现过一个第三方的信息枚举工具 enum.exe，其利用SMB协议枚举Windows系统和SAMBA服务，以此来获得目标系统大量的重要信息，其枚举结果可能包含目标系统的用户帐号、组帐号、共享目录、密码策略等机密重要信息。enum4linux作为其Linux平台的复刻作品，全面兼容了enum.exe的所有功能。对于安全防护不足的SMB&#x2F;SAMBA服务，enum4linux可直接枚举重要信息，甚至帮助我们发现潜在漏洞的存在。为充分利用其功能，使用者需要对NetBIOS和SMB协议有所了解。</p>
+<p>enum4linux是Kali Linux自带的一款信息收集工具。它可以收集Windows系统的大量信息，如用户名列表、主机列表、共享列表、密码策略信息、工作组和成员信息、主机信息、打印机信息等等。</p>
+<p><strong>SMB</strong></p>
+<p>SMB协议是建立在NetBIOS协议之上的应用协议，是基于TCP协议的139和445两个端口的 服务。</p>
+<p><strong>NetBIOS</strong></p>
+<p>是用于局域网计算机连接的一个通信协议，主要 用来解析计算机名称</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smbclient -L //目标IP -N        # 1. 匿名列共享</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/21bc3e928222627276534b18c3edf6cc.png" alt="img"></p>
+<p>share$ 类型是 Disk，注释 “Sumshare” → 匿名可读&#x2F;写共享。</p>
+<p>然后我们就用匿名身份直接连接靶机的share$共享目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smbclient //192.168.240.128/share$ -N（-N是不问密码）</span><br></pre></td></tr></table></figure>
+
+<p>这是用 smbclient 交互拿文件</p>
+<p>进入交互界面先ls查看有啥</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/0e582b15ea437a99119a7c362bd842e5.png" alt="img"></p>
+<p>一眼看到wordpress,先进入这个界面，然后看看有没有放用户名密码的文件wp-config.php</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/feb0f99571ece51d4f4372c380dbb77b.png" alt="img"></p>
+<p>果然是有的，但是因为这是交互界面，无法直接查看，没关系，用get命令下载到本地看即可</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/bde5531f66dff3b2da33166be33ff983.png" alt="img"></p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/0feb80e69ce1e7c2c1a147ed00ee76d6.png" alt="img"></p>
+<p>拿到数据库的用户名和密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Admin</span><br><span class="line"></span><br><span class="line">TogieMYSQL12345^^</span><br></pre></td></tr></table></figure>
+
+<p>然后我们看这个共享目录，除了我们之前看过的已经确定没啥用的了，就剩下wp目录和deets.txt文件了进到wp目录下没啥东西，但是看到deets.txt文件，在靶场环境下看到这个一般是线索，先下载下来</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/4b6f31a3338e732dea2a957b64f16df3.png" alt="img"></p>
+<p>下载到本地查看</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/e24e70bd1b01651550f4fdc308413b26.png" alt="img"></p>
+<p>能找到的信息基本上都看到了，而且我们拿到了数据库的用户名和密码，还一个密码应该是wordpress的密码，但是还不知道用户名，没事，先登phpmyadmin看看有啥</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.240.128/phpmyadmin</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/b8615228433020140607d6f6ff8e47e4.png" alt="img"></p>
+<p>登进去发现没有表项可以查看</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/2cf6029c410c45334b4d066d256b6df8.png" alt="img"></p>
+<p>那我们登入wordpress看看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.240.128/wordpress</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/3e347d9fe9f4c604853895a83b0d0ba6.png" alt="img"></p>
+<p>发现一个用户名，会不会是靶机的用户名，密码正好是刚才那个没用过的12345</p>
+<p>尝试一下吧</p>
+<h4 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h4><p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/76073ec6e8e66dd46419031bcb8c3940.png" alt="img"></p>
+<p>成功登入</p>
+<p>成功拿到低权shell</p>
+<p>下面又是一套动作，试一下当前用户是否有root权限，能让我们直接提权</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id</span><br><span class="line">whoami</span><br><span class="line">sudo -l</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/bd3d1c530eaabbffac2e2cff9d499e83.png" alt="img"></p>
+<p>红框圈住的就是终点代表无密码全权意思就是有root权限，可以直接sudo su -,直接root</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/d7d3a51be5fdca2373316812a35a9e72.png" alt="img"></p>
+<p>现在我们已经成功提权，有root权限了</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/b61e04c8cb2926d12cdabc2a6dc01a08.png" alt="img"></p>
+
     </article>
     
     <div class="read-nums">
@@ -394,7 +488,7 @@
     <div class="article-catelogue--wrapper">
       <div class="catelogue catelogue-1">
         <h3>目录</h3>
-        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#LazySysAdmin%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F"><span class="toc-number">1.</span> <span class="toc-text">LazySysAdmin靶机渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%B6%E6%9C%BA%E6%90%AD%E5%BB%BA"><span class="toc-number">1.1.</span> <span class="toc-text">靶机搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F"><span class="toc-number">1.2.</span> <span class="toc-text">靶机渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">主机发现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">端口扫描</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#banner%E4%BF%A1%E6%81%AF"><span class="toc-number">1.2.1.2.1.</span> <span class="toc-text">banner信息</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8C%BF%E5%90%8D%E8%BF%9E%E6%8E%A5%E9%9D%B6%E6%9C%BA%E5%85%B1%E4%BA%AB%E7%9B%AE%E5%BD%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">匿名连接靶机共享目录</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#enum4linux"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">enum4linux</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.2.3.</span> <span class="toc-text">提权</span></a></li></ol></li></ol></li></ol>
       </div>
       
         <div class="catelogue catelogue-2">
